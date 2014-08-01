@@ -28,7 +28,7 @@
 }
 
 - (void) viewWillAppear:(BOOL)animated {
-    self.title = self.assignment.assignmentName;
+    self.title = self.assignment.name;
     self.initialQueryComplete = NO;
     [self.tableView reloadData];
     [self _queryForGradeEntries];
@@ -76,7 +76,7 @@
         cell = [tableView dequeueReusableCellWithIdentifier:kGradeEntryCellIdentifier forIndexPath:indexPath];
         
         GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
-        cell.textLabel.text = currentRowGradeEntry.studentName;
+        cell.textLabel.text = currentRowGradeEntry.studentKey;
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", currentRowGradeEntry.score];
 
     }
@@ -107,7 +107,7 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
-        [self _deleteGradeEntry: currentRowGradeEntry.identifier];
+        [self _deleteGradeEntry: currentRowGradeEntry.entityKey];
         [self.gradeEntries removeObjectAtIndex:indexPath.row];
         if (self.gradeEntries.count == 0) {
             [tableView reloadData];
@@ -165,9 +165,8 @@
 #pragma mark - Performing Endpoints Queries
 
 - (void) _queryForGradeEntries {
-    NSNumber* assignmentId = self.assignment.identifier;
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
-    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentId:assignmentId.longLongValue];
+    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
     query.order = @"student_name";
     query.limit = 40;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -189,9 +188,9 @@
     }];
 }
 
-- (void) _deleteGradeEntry:(NSNumber*) idToDelete {
+- (void) _deleteGradeEntry:(NSString*) entityKeyToDelete {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
-    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryDeleteWithIdentifier:idToDelete.longLongValue];
+    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryDeleteWithEntityKey:entityKeyToDelete];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderGradeEntry* deletedGradeEntry, NSError* error){
         if (error == nil) {
             NSLog(@"Successfully deleted the grade entry.");

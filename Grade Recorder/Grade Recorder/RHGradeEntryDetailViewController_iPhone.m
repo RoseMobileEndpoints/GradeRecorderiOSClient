@@ -36,7 +36,7 @@
     NSInteger studentIndex = 0;
     if (self.gradeEntry != nil) {
         self.scoreTextField.text = [self.gradeEntry.score description];
-        NSUInteger searchResult = [self.studentNames indexOfObject:self.gradeEntry.studentName];
+        NSUInteger searchResult = [self.studentNames indexOfObject:self.gradeEntry.studentKey];
         if (searchResult != NSNotFound) {
             studentIndex = searchResult;
         }
@@ -56,17 +56,17 @@
     
     
     GTLGraderecorderGradeEntry* newGradeEntry = [[GTLGraderecorderGradeEntry alloc] init];
-    newGradeEntry.assignmentId = self.parentAssignment.identifier;
+    newGradeEntry.assignmentKey = self.parentAssignment.entityKey;
     
     // Check to see if there is already a grade entry for this exact student name.  If so replace it instead.
     for (GTLGraderecorderGradeEntry* aGradeEntry in self.allGradesForAssignment) {
-        if ([aGradeEntry.studentName isEqualToString:student]) {
+        if ([aGradeEntry.studentKey isEqualToString:student]) {
             self.statusTextView.text = [NSString stringWithFormat:@"%@\nReplacing the %@", self.statusTextView.text, aGradeEntry.score];
             newGradeEntry = aGradeEntry;
             break;
         }
     }
-    newGradeEntry.studentName = student;
+    newGradeEntry.studentKey = student;
     newGradeEntry.score = score;
     [self _insertGradeEntry:newGradeEntry];
 }

@@ -91,7 +91,7 @@
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
         GTLGraderecorderAssignment* currentRowAssignment = self.assignments[indexPath.row];
-        cell.textLabel.text = currentRowAssignment.assignmentName;
+        cell.textLabel.text = currentRowAssignment.name;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
@@ -123,7 +123,7 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         GTLGraderecorderAssignment* currentRowAssignment = self.assignments[indexPath.row];
-        [self _deleteAssignment: currentRowAssignment.identifier];
+        [self _deleteAssignment: currentRowAssignment.entityKey];
         [self.assignments removeObjectAtIndex:indexPath.row];
         
         if (self.assignments.count == 0) {
@@ -147,14 +147,14 @@
     self.accessorySelectedIndexPath = indexPath;
     GTLGraderecorderAssignment* currentAssignment = self.assignments[indexPath.row];
     UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Edit assignment name"
-                                                    message:[NSString stringWithFormat:@"Current name %@", currentAssignment.assignmentName]
+                                                    message:[NSString stringWithFormat:@"Current name %@", currentAssignment.name]
                                                    delegate:self
                                           cancelButtonTitle:@"Cancel"
                                           otherButtonTitles:@"Update name", nil];
     [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
     UITextField* tf = [alert textFieldAtIndex:0];
     tf.placeholder = @"New name for assignment";
-    tf.text = currentAssignment.assignmentName;
+    tf.text = currentAssignment.name;
     [tf setClearButtonMode:UITextFieldViewModeAlways];
     [alert show];
 }
@@ -223,7 +223,7 @@
             NSLog(@"Adding a new assignment");
             NSString* assignmentName = [[alertView textFieldAtIndex:0] text];
             GTLGraderecorderAssignment* newAssignment = [[GTLGraderecorderAssignment alloc] init];
-            newAssignment.assignmentName = assignmentName;
+            newAssignment.name = assignmentName;
 
             // Put the new assignment into the correct alphabetical location.
             NSUInteger insertLocation = [self.assignments
@@ -231,7 +231,7 @@
                                    inSortedRange:(NSRange){0, self.assignments.count}
                                    options:NSBinarySearchingInsertionIndex
                                    usingComparator:^NSComparisonResult(id obj1, id obj2) {
-                                       return [[(GTLGraderecorderAssignment*) obj1 assignmentName] compare:[(GTLGraderecorderAssignment*) obj2 assignmentName]];
+                                       return [[(GTLGraderecorderAssignment*) obj1 name] compare:[(GTLGraderecorderAssignment*) obj2 name]];
                                    }];
             [self.assignments insertObject:newAssignment atIndex:insertLocation];
 
@@ -247,7 +247,7 @@
             NSLog(@"Updating an existing assignment name");
             NSString* newAssignmentName = [[alertView textFieldAtIndex:0] text];
             GTLGraderecorderAssignment* currentAssignment = self.assignments[self.accessorySelectedIndexPath.row];
-            currentAssignment.assignmentName = newAssignmentName;
+            currentAssignment.name = newAssignmentName;
             [self _insertAssignment:currentAssignment];
             [self.tableView reloadRowsAtIndexPaths:@[self.accessorySelectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
@@ -289,7 +289,7 @@
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error == nil) {
             NSLog(@"Successfully updated/added the assignment.");
-            assignment.identifier = updatedAssignment.identifier;
+            assignment.entityKey = updatedAssignment.entityKey;
         } else {
             NSLog(@"The assignment did not get updated/added.");
             [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
@@ -298,9 +298,9 @@
     }];
 }
 
-- (void) _deleteAssignment:(NSNumber*) idToDelete {
+- (void) _deleteAssignment:(NSString*) entityKeyToDelete {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
-    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentDeleteWithIdentifier:idToDelete.longLongValue];
+    GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentDeleteWithEntityKey:entityKeyToDelete];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignment* deletedAssignment, NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
