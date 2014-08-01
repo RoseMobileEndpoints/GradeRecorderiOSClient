@@ -51,11 +51,9 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+
 - (IBAction)pressedOptions:(id)sender {
-    NSString* toggleRenameButtonsTitle = @"Show rename buttons";
-    if (self.showingRenameButtons) {
-        toggleRenameButtonsTitle = @"Hide rename buttons";
-    }
+    NSString* toggleRenameButtonsTitle = self.showingRenameButtons ? @"Hide rename buttons" : @"Show rename buttons";
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
@@ -76,14 +74,11 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.assignments.count == 0) {
-        return 1;
-    }
-    return self.assignments.count;
+    return self.assignments.count == 0 ? 1 : self.assignments.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+
+- (UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
     UITableViewCell *cell = nil;
     if ([self.assignments count] == 0) {
         if (self.initialQueryComplete) {
@@ -107,40 +102,40 @@
         cell.textLabel.text = currentRowAssignment.name;
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
     return cell;
-
 }
 
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
     [super setEditing:editing animated:animated];
     if (editing) {
-        NSLog(@"Change the right button to the edit button for Done.");
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
     } else {
-        NSLog(@"Put back the options button");
         self.navigationItem.rightBarButtonItem = self.optionsBarButton;
     }
 }
 
+
 // Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+- (BOOL) tableView:(UITableView*) tableView canEditRowAtIndexPath:(NSIndexPath*) indexPath {
     if (self.assignments.count == 0) {
         return NO;
     }
     return YES;
 }
 
+
 // Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void) tableView:(UITableView*) tableView
+commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
+ forRowAtIndexPath:(NSIndexPath*) indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         GTLGraderecorderAssignment* currentRowAssignment = self.assignments[indexPath.row];
         [self _deleteAssignment: currentRowAssignment.entityKey];
         [self.assignments removeObjectAtIndex:indexPath.row];
-        
         if (self.assignments.count == 0) {
             [self.tableView reloadData];
+            [self setEditing:NO animated:YES];  // Nothing more to delete so end editing mode.
         } else {
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
@@ -274,7 +269,6 @@
 - (void) _queryForAssignments {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentList];
-    query.order = @"assignment_name";
     query.limit = 30;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignmentCollection* assignmentCollection, NSError* error){
@@ -282,7 +276,7 @@
         self.initialQueryComplete = YES;
         if (error == nil) {
             if (assignmentCollection.nextPageToken != nil) {
-                NSLog(@"TODO: query for more assignemnts");
+                NSLog(@"TODO: query for more assignemnts using page token %@", assignmentCollection.nextPageToken);
             }
             self.assignments = [assignmentCollection.items mutableCopy];
         } else {
@@ -297,17 +291,19 @@
 - (void) _insertAssignment:(GTLGraderecorderAssignment*) assignment {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentInsertWithObject:assignment];
+    if (kLocalHostTesting) {
+        query.JSON = assignment.JSON;
+        query.bodyObject = nil;
+    }
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignment* updatedAssignment, NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
-        if (error == nil) {
-            NSLog(@"Successfully updated/added the assignment.");
-            assignment.entityKey = updatedAssignment.entityKey;
-        } else {
-            NSLog(@"The assignment did not get updated/added.");
+        if (error != nil) {
             [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            return;
         }
-        [self _queryForAssignments]; // Do an update for all the assignments. Very important to update the
+        assignment.entityKey = updatedAssignment.entityKey;
+        [self performSelector:@selector(_queryForAssignments) withObject:nil afterDelay:1.0];
     }];
 }
 
@@ -325,7 +321,5 @@
         }
     }];
 }
-
-
 
 @end
