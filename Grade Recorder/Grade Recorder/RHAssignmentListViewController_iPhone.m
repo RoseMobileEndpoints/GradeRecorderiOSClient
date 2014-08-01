@@ -7,7 +7,9 @@
 //
 
 #import "RHAssignmentListViewController_iPhone.h"
+
 #import "GTLGraderecorder.h"
+
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryListViewController_iPhone.h"
 
@@ -28,10 +30,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.navigationItem.hidesBackButton = YES;
+    UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(_queryForAssignments)
+             forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
+}
+
+
+- (void) viewWillAppear:(BOOL) animated {
+    [super viewWillAppear:animated];
     self.showingRenameButtons = NO;
     self.initialQueryComplete = NO;
     [self _queryForAssignments];
 }
+
 
 - (IBAction)pressedSignOut:(id)sender {
     [[RHEndpointsAdapter sharedInstance] signOut];
@@ -206,10 +219,9 @@
             break;
         case 3:
             // Force sync
-            NSLog(@"Force sycn");
+            NSLog(@"Requery for assignments");
             [self _queryForAssignments];
             break;
-
     }
     
 }
@@ -278,6 +290,7 @@
             [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
         }
         [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
     }];
 }
 
