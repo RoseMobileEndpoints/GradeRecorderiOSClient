@@ -14,12 +14,9 @@
 
 
 @implementation RHEndpointsAdapter
-
 @synthesize authorizer = _authorizer;
 
-
-+ (id) sharedInstance
-{
++ (id) sharedInstance {
     static dispatch_once_t pred;
     static RHEndpointsAdapter *sharedInstance = nil;
     dispatch_once(&pred, ^{

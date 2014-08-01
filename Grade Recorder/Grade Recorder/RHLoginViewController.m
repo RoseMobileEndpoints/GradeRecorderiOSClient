@@ -23,12 +23,14 @@
 	// Do any additional setup after loading the view.
 }
 
+
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     if ([[RHEndpointsAdapter sharedInstance] authorizer] != nil) {
         [self performSegueWithIdentifier:kLoginCompleteSegue sender:nil];
     }
 }
+
 
 - (IBAction)pressedSignIn:(id)sender {
     GTMOAuth2ViewControllerTouch* signInViewController = [[GTMOAuth2ViewControllerTouch alloc] initWithScope:kScope
@@ -50,6 +52,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+
 - (void)viewController:(GTMOAuth2ViewControllerTouch *)viewController
       finishedWithAuth:(GTMOAuth2Authentication *)auth
                  error:(NSError *)error {
@@ -64,6 +67,5 @@
         [self performSegueWithIdentifier:kLoginCompleteSegue sender:nil];
     }
 }
-
 
 @end
