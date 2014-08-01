@@ -118,10 +118,7 @@
 
 // Override to support conditional editing of the table view.
 - (BOOL) tableView:(UITableView*) tableView canEditRowAtIndexPath:(NSIndexPath*) indexPath {
-    if (self.assignments.count == 0) {
-        return NO;
-    }
-    return YES;
+    return self.assignments.count != 0;
 }
 
 

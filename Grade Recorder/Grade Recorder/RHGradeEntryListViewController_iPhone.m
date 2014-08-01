@@ -7,7 +7,9 @@
 //
 
 #import "RHGradeEntryListViewController_iPhone.h"
+
 #import "GTLGraderecorder.h"
+
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryDetailViewController_iPhone.h"
 
@@ -16,16 +18,22 @@
 #define kNoGradeEntriesCellIdentifier @"NoGradeEntriesCell"
 #define kPushGradeEntryDetailSegue @"PushGradeEntryDetailSegue"
 
+
 @interface RHGradeEntryListViewController_iPhone ()
 @property (nonatomic) BOOL initialQueryComplete;
-
 @end
 
 @implementation RHGradeEntryListViewController_iPhone
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self
+                       action:@selector(_queryForGradeEntries)
+             forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = refreshControl;
 }
+
 
 - (void) viewWillAppear:(BOOL)animated {
     self.title = self.assignment.name;
@@ -34,12 +42,14 @@
     [self _queryForGradeEntries];
 }
 
-- (void) setAssignment:(GTLGraderecorderAssignment *)assignment {
+
+- (void) setAssignment:(GTLGraderecorderAssignment*) assignment {
     if (_assignment == nil || ![_assignment isEqual:assignment]) {
         [self.gradeEntries removeAllObjects];
     }
     _assignment = assignment;
 }
+
 
 - (IBAction) pressedOptionsButton:(id)sender {
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
@@ -52,15 +62,13 @@
 
 
 #pragma mark - Table view data source
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.gradeEntries.count == 0) {
-        return 1;
-    }
-    return self.gradeEntries.count;
+
+- (NSInteger) tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
+    return self.gradeEntries.count == 0 ? 1 : self.gradeEntries.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+
+- (UITableViewCell*) tableView:(UITableView*) tableView cellForRowAtIndexPath:(NSIndexPath*) indexPath {
     UITableViewCell *cell = nil;
     if ([self.gradeEntries count] == 0) {
         if (self.initialQueryComplete) {
@@ -74,34 +82,30 @@
         }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:kGradeEntryCellIdentifier forIndexPath:indexPath];
-        
         GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
         cell.textLabel.text = currentRowGradeEntry.studentKey;
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", currentRowGradeEntry.score];
-
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 
-- (void) setEditing:(BOOL)editing animated:(BOOL)animated {
+
+- (void) setEditing:(BOOL) editing animated:(BOOL) animated {
     [super setEditing:editing animated:animated];
     if (editing) {
-        NSLog(@"Change the right button to the edit button for Done.");
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
     } else {
-        NSLog(@"Put back the options button");
         self.navigationItem.rightBarButtonItem = self.optionsBarButton;
     }
 }
 
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.gradeEntries.count == 0) {
-        return NO;
-    }
-    return YES;
+    return self.gradeEntries.count != 0;
 }
+
 
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -111,6 +115,7 @@
         [self.gradeEntries removeObjectAtIndex:indexPath.row];
         if (self.gradeEntries.count == 0) {
             [tableView reloadData];
+            [self setEditing:NO animated:YES];
         } else {
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
@@ -125,6 +130,7 @@
     [self performSegueWithIdentifier:kPushGradeEntryDetailSegue sender:currentRowGradeEntry];
 }
 
+
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
@@ -136,6 +142,7 @@
         destination.allGradesForAssignment = self.gradeEntries;
     }
 }
+
 
 #pragma mark - UIActionSheet
 
@@ -154,39 +161,36 @@
             break;
         case 3:
             // Force sync
-            NSLog(@"Force sycn");
+            NSLog(@"Query for grade entries");
             [self _queryForGradeEntries];
             break;
-            
     }
-    
 }
+
 
 #pragma mark - Performing Endpoints Queries
 
 - (void) _queryForGradeEntries {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
-    query.order = @"student_name";
-    query.limit = 40;
+    query.limit = 50;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderGradeEntryCollection* gradeEntryCollection, NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         self.initialQueryComplete = YES;
         if (error == nil) {
-//            NSLog(@"Successful query for grade entries.  Count = %d", gradeEntryCollection.items.count);
-//            NSLog(@"Next page token = %@", gradeEntryCollection.nextPageToken);
-            if (gradeEntryCollection.nextPageToken != nil) {
-                NSLog(@"TODO: query for more grade entries");
-            }
             self.gradeEntries = [gradeEntryCollection.items mutableCopy];
+            if (gradeEntryCollection.nextPageToken != nil) {
+                NSLog(@"TODO: query for more grade entries using %@", gradeEntryCollection.nextPageToken);
+            }
         } else {
-            NSLog(@"Unable to query for grade entries");
             [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
         }
         [self.tableView reloadData];
+        [self.refreshControl endRefreshing];
     }];
 }
+
 
 - (void) _deleteGradeEntry:(NSString*) entityKeyToDelete {
     GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
@@ -200,6 +204,5 @@
         }
     }];
 }
-
 
 @end

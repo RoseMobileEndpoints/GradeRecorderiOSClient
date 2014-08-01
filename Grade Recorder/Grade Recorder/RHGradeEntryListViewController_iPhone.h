@@ -13,7 +13,8 @@
 
 @property (nonatomic, strong) GTLGraderecorderAssignment* assignment;
 @property (nonatomic, strong) NSMutableArray* gradeEntries;
-- (IBAction)pressedOptionsButton:(id)sender;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *optionsBarButton;
+
+- (IBAction) pressedOptionsButton:(id) sender;
 
 @end
