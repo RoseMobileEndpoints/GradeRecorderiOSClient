@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>1304AD11-F900-4F3C-AED8-062AC5A26132</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Grade Recorder</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>5224D6CB-78AD-4B46-A88E-79DBDED1D717</key>
+		<string>https://github.com/RoseMobileEndpoints/GradeRecorderiOSClient.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Grade Recorder/Grade Recorder.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>5224D6CB-78AD-4B46-A88E-79DBDED1D717</key>
+		<string>../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/RoseMobileEndpoints/GradeRecorderiOSClient.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>5224D6CB-78AD-4B46-A88E-79DBDED1D717</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>5224D6CB-78AD-4B46-A88E-79DBDED1D717</string>
+			<key>IDESourceControlWCCName</key>
+			<string>GradeRecorderiOSClient</string>
+		</dict>
+	</array>
+</dict>
+</plist>
