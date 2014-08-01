@@ -29,26 +29,7 @@
                           @"Team 02",
                           @"Team 03",
                           @"Team 04",
-                          @"Team 05",
-                          @"Team 06",
-                          @"Team 07",
-                          @"Team 08",
-                          @"Team 09",
-                          @"Team 10",
-                          @"Team 11",
-                          @"Team 12",
-                          @"Team 13",
-                          @"Team 14",
-                          @"Team 15",
-                          @"Team 16",
-                          @"Team 17",
-                          @"Team 18",
-                          @"Team 19",
-                          @"Team 20",
-                          @"Team 21",
-                          @"Team 22",
-                          @"Team 23",
-                          @"Team 24"];
+                          @"Team 05"];
 }
 
 - (void) viewWillAppear:(BOOL)animated {
