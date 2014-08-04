@@ -12,6 +12,7 @@
 
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryListViewController_iPhone.h"
+#import "RHStudentAdapter.h"
 
 #define kAssignmentCellIdentifier @"AssignmentCell"
 #define kLoadingAssignmentsCellIdentifier @"LoadingAssignmentsCell"
@@ -46,6 +47,13 @@
 }
 
 
+- (void) viewDidAppear:(BOOL) animated {
+    if ([RHStudentAdapter getStudents] == nil) {
+        [RHStudentAdapter updateStudentRosterWithCallback:nil]; // No action needed when complete.
+    }
+}
+
+
 - (IBAction)pressedSignOut:(id)sender {
     [[RHEndpointsAdapter sharedInstance] signOut];
     [self.navigationController popViewControllerAnimated:YES];
@@ -58,7 +66,7 @@
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Add an assignment", @"Delete an assignment", toggleRenameButtonsTitle, @"Check for new grades", nil];
+                                                    otherButtonTitles:@"Add an assignment", @"Delete an assignment", toggleRenameButtonsTitle, @"Refresh student roster", @"Refresh assignment list", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -210,12 +218,16 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             [self.tableView reloadData];
             break;
         case 3:
-            // Force sync
+            // Update Student Roster
+            NSLog(@"Refresh student roster");
+            [RHStudentAdapter updateStudentRosterWithCallback:nil];
+            break;
+        case 4:
+            // Check for new grades (also done via pull down to refresh)
             NSLog(@"Requery for assignments");
             [self _queryForAssignments];
             break;
     }
-    
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -255,7 +267,6 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             [self _insertAssignment:currentAssignment];
             [self.tableView reloadRowsAtIndexPaths:@[self.accessorySelectedIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
         }
-        
     }
 }
 

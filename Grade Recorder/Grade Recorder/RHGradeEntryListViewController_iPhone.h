@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 @class GTLGraderecorderAssignment;
 
-@interface RHGradeEntryListViewController_iPhone : UITableViewController <UIActionSheetDelegate>
+@interface RHGradeEntryListViewController_iPhone : UITableViewController <UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) GTLGraderecorderAssignment* assignment;
 @property (nonatomic, strong) NSMutableArray* gradeEntries;

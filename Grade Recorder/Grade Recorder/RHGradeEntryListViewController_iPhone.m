@@ -12,6 +12,7 @@
 
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryDetailViewController_iPhone.h"
+#import "RHStudentAdapter.h"
 
 #define kGradeEntryCellIdentifier @"GradeEntryCell"
 #define kLoadingGradeEntriesCellIdentifier @"LoadingGradeEntriesCell"
@@ -21,6 +22,7 @@
 
 @interface RHGradeEntryListViewController_iPhone ()
 @property (nonatomic) BOOL initialQueryComplete;
+@property (nonatomic, weak) NSDictionary* studentMap;
 @end
 
 @implementation RHGradeEntryListViewController_iPhone
@@ -50,13 +52,19 @@
     _assignment = assignment;
 }
 
+- (NSDictionary*) studentMap {
+    if (_studentMap == nil) {
+        _studentMap = [RHStudentAdapter getStudentMap];
+    }
+    return _studentMap;
+}
 
 - (IBAction) pressedOptionsButton:(id)sender {
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Add a grade entry", @"Delete a grade entry", @"Check for new grades", nil];
+                                                    otherButtonTitles:@"Add a grade entry", @"Delete a grade entry", @"Refresh student roster", @"Refresh Grade Entries", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -83,7 +91,15 @@
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:kGradeEntryCellIdentifier forIndexPath:indexPath];
         GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
-        cell.textLabel.text = currentRowGradeEntry.studentKey;
+        GTLGraderecorderStudent* student = [self.studentMap objectForKey:currentRowGradeEntry.studentKey];
+        if (student != nil) {
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", student.firstName, student.lastName];
+        } else {
+            cell.textLabel.text = @"Missing name";
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+
+        }
         cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", currentRowGradeEntry.score];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -131,6 +147,29 @@
 }
 
 
+- (void) tableView:(UITableView*) tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Missing student data"
+                                                    message:@"Would you like to update the student roster now?"
+                                                   delegate:self
+                                          cancelButtonTitle:@"Cancel"
+                                          otherButtonTitles:@"Update roster", nil];
+    [alert show];
+}
+
+
+#pragma mark - UIAlertViewDelegate
+
+// Called when a button is clicked. The view will be automatically dismissed after this call returns
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex != alertView.cancelButtonIndex) {
+        [RHStudentAdapter updateStudentRosterWithCallback:^{
+            NSLog(@"Roster up to date.  Refresh table.");
+            [self.tableView reloadData];
+        }];
+    }
+}
+
+
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
@@ -159,9 +198,18 @@
             NSLog(@"Delete an grade entry");
             [self setEditing:YES animated:YES];
             break;
+        case 2: {
+            // Update Student Roster
+            NSLog(@"Refresh student roster");
+            [RHStudentAdapter updateStudentRosterWithCallback:^{
+                NSLog(@"Roster up to date.  Refresh table.");
+                [self.tableView reloadData];
+            }];
+        }
+            break;
         case 3:
             // Force sync
-            NSLog(@"Query for grade entries");
+            NSLog(@"Refresh Grade Entries");
             [self _queryForGradeEntries];
             break;
     }

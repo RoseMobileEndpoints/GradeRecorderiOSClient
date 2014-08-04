@@ -10,7 +10,7 @@
 @class GTLServiceGraderecorder;
 @class GTMOAuth2Authentication;
 
-#define kLocalHostTesting NO
+#define kLocalHostTesting YES
 #define kLocalHostUrl @"http://localhost:8080/_ah/api/rpc?prettyPrint=false"
 //#define kLocalHostUrl @"http://137.112.44.42:8080/_ah/api/rpc?prettyPrint=false"
 

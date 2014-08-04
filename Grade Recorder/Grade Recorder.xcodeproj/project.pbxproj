@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FD101EE8198FD894002175DF /* RHStudentAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101EE7198FD894002175DF /* RHStudentAdapter.m */; };
 		FD1C8E87198BCE39001E31D7 /* GTLGraderecorderAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E76198BCE39001E31D7 /* GTLGraderecorderAssignment.m */; };
 		FD1C8E88198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E78198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m */; };
 		FD1C8E89198BCE39001E31D7 /* GTLGraderecorderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E7A198BCE39001E31D7 /* GTLGraderecorderConstants.m */; };
@@ -77,6 +78,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FD101EE6198FD894002175DF /* RHStudentAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHStudentAdapter.h; sourceTree = "<group>"; };
+		FD101EE7198FD894002175DF /* RHStudentAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHStudentAdapter.m; sourceTree = "<group>"; };
 		FD1C8E74198BCE39001E31D7 /* GTLGraderecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLGraderecorder.h; sourceTree = "<group>"; };
 		FD1C8E75198BCE39001E31D7 /* GTLGraderecorderAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLGraderecorderAssignment.h; sourceTree = "<group>"; };
 		FD1C8E76198BCE39001E31D7 /* GTLGraderecorderAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLGraderecorderAssignment.m; sourceTree = "<group>"; };
@@ -256,6 +259,8 @@
 				FDF54545180A431400BFDC16 /* RHEndpointsAdapter.m */,
 				FDF5454B180A495A00BFDC16 /* RHLoginViewController.h */,
 				FDF5454C180A495A00BFDC16 /* RHLoginViewController.m */,
+				FD101EE6198FD894002175DF /* RHStudentAdapter.h */,
+				FD101EE7198FD894002175DF /* RHStudentAdapter.m */,
 			);
 			path = "Grade Recorder";
 			sourceTree = "<group>";
@@ -498,6 +503,7 @@
 				FDF5454D180A495A00BFDC16 /* RHLoginViewController.m in Sources */,
 				FDF54546180A431400BFDC16 /* RHEndpointsAdapter.m in Sources */,
 				FD4AF54E182C9CFA001554F3 /* GTMGatherInputStream.m in Sources */,
+				FD101EE8198FD894002175DF /* RHStudentAdapter.m in Sources */,
 				FD4AF54B182C9CFA001554F3 /* GTMHTTPFetcherLogging.m in Sources */,
 				FD1C8E8D198BCE39001E31D7 /* GTLGraderecorderStudentCollection.m in Sources */,
 				FD4AF541182C9CFA001554F3 /* GTLUploadParameters.m in Sources */,
