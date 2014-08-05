@@ -11,7 +11,8 @@
 #import "GTLGraderecorder.h"
 
 #import "GTLGraderecorderStudent+Customization.h"
-#import "RHEndpointsAdapter.h"
+#import "RHDialogUtils.h"
+#import "RHOAuthUtils.h"
 #import "RHStudentUtils.h"
 
 
@@ -141,9 +142,9 @@
 #pragma mark - Endpoints methods
 
 - (void) _insertGradeEntry:(GTLGraderecorderGradeEntry*) gradeEntry {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryInsertWithObject:gradeEntry];
-    if (kLocalHostTesting) {
+    if ([RHOAuthUtils isLocalHost]) {
         query.JSON = gradeEntry.JSON;
         query.bodyObject = nil;
     }
@@ -156,7 +157,7 @@
             self.gradeEntry = nil;
         } else {
             NSLog(@"The grade entry did not get updated/added. error = %@", error.localizedDescription);
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
         }
         [self.scoreTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:2.0];
     }];

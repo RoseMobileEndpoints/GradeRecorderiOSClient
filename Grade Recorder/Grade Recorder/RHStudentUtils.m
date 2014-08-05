@@ -10,7 +10,8 @@
 
 #import "GTLGraderecorder.h"
 
-#import "RHEndpointsAdapter.h"
+#import "RHDialogUtils.h"
+#import "RHOAuthUtils.h"
 
 static BOOL __isQueryInProgress;
 static NSMutableArray* __students;
@@ -24,6 +25,7 @@ static NSMutableDictionary* __studentMap;
     if (__isQueryInProgress) {
         return NO;
     }
+    NSLog(@"Query for students.");
     __isQueryInProgress = YES;
     __students = [[NSMutableArray alloc] init];
     __studentMap = [[NSMutableDictionary alloc] init];
@@ -44,7 +46,7 @@ static NSMutableDictionary* __studentMap;
 
 
 + (void) _queryForStudentsWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder* query = [GTLQueryGraderecorder queryForStudentList];
     query.limit = 10;
     query.pageToken = pageToken;
@@ -55,7 +57,8 @@ static NSMutableDictionary* __studentMap;
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error != nil) {
             NSLog(@"Unable to query for students %@", error);
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
+            __isQueryInProgress = NO;
             return;
         }
 

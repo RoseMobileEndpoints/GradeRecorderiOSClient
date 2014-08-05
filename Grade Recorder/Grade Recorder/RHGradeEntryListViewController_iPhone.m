@@ -10,8 +10,9 @@
 
 #import "GTLGraderecorder.h"
 
-#import "RHEndpointsAdapter.h"
+#import "RHDialogUtils.h"
 #import "RHGradeEntryDetailViewController_iPhone.h"
+#import "RHOAuthUtils.h"
 #import "RHStudentUtils.h"
 
 #define kGradeEntryCellIdentifier @"GradeEntryCell"
@@ -218,7 +219,7 @@
 #pragma mark - Performing Endpoints Queries
 
 - (void) _queryForGradeEntries {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
     query.limit = 50;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -231,7 +232,7 @@
                 NSLog(@"TODO: query for more grade entries using %@", gradeEntryCollection.nextPageToken);
             }
         } else {
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
         }
         [self.tableView reloadData];
         [self.refreshControl endRefreshing];
@@ -240,14 +241,14 @@
 
 
 - (void) _deleteGradeEntry:(NSString*) entityKeyToDelete {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryDeleteWithEntityKey:entityKeyToDelete];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderGradeEntry* deletedGradeEntry, NSError* error){
         if (error == nil) {
             NSLog(@"Successfully deleted the grade entry.");
         } else {
             NSLog(@"The grade entry did not get deleted.");
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
         }
     }];
 }

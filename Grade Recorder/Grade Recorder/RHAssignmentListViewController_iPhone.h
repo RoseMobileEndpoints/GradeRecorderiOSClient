@@ -11,10 +11,9 @@
 @interface RHAssignmentListViewController_iPhone : UITableViewController <UIAlertViewDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) NSMutableArray* assignments;
-
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *optionsBarButton;
 
-- (IBAction)pressedSignOut:(id)sender;
-- (IBAction)pressedOptions:(id)sender;
+- (IBAction) pressedSignOut:(id) sender;
+- (IBAction) pressedOptions:(id) sender;
 
 @end

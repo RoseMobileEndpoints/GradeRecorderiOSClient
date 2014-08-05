@@ -10,8 +10,9 @@
 
 #import "GTLGraderecorder.h"
 
-#import "RHEndpointsAdapter.h"
+#import "RHDialogUtils.h"
 #import "RHGradeEntryListViewController_iPhone.h"
+#import "RHOAuthUtils.h"
 #import "RHStudentUtils.h"
 
 #define kAssignmentCellIdentifier @"AssignmentCell"
@@ -49,13 +50,14 @@
 
 - (void) viewDidAppear:(BOOL) animated {
     if ([RHStudentUtils getStudents] == nil) {
+        NSLog(@"StudentUtils has no students, so update the roster now for later use.");
         [RHStudentUtils updateStudentRosterWithCallback:nil]; // No action needed when complete.
     }
 }
 
 
 - (IBAction)pressedSignOut:(id)sender {
-    [[RHEndpointsAdapter sharedInstance] signOut];
+    [RHOAuthUtils signOut];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -276,7 +278,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 #pragma mark - Performing Endpoints Queries
 
 - (void) _queryForAssignments {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentList];
     query.limit = 30;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -290,7 +292,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             self.assignments = [assignmentCollection.items mutableCopy];
         } else {
             NSLog(@"Unable to query for assignments %@", error);
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
         }
         [self.tableView reloadData];
         [self.refreshControl endRefreshing];
@@ -298,9 +300,9 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 }
 
 - (void) _insertAssignment:(GTLGraderecorderAssignment*) assignment {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentInsertWithObject:assignment];
-    if (kLocalHostTesting) {
+    if ([RHOAuthUtils isLocalHost]) {
         query.JSON = assignment.JSON;
         query.bodyObject = nil;
     }
@@ -308,7 +310,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignment* updatedAssignment, NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         if (error != nil) {
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
             return;
         }
         assignment.entityKey = updatedAssignment.entityKey;
@@ -317,7 +319,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 }
 
 - (void) _deleteAssignment:(NSString*) entityKeyToDelete {
-    GTLServiceGraderecorder* service = [[RHEndpointsAdapter sharedInstance] graderecorderService];
+    GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentDeleteWithEntityKey:entityKeyToDelete];
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignment* deletedAssignment, NSError* error){
@@ -326,7 +328,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             NSLog(@"Successfully deleted the assignment.");
         } else {
             NSLog(@"The assignment did not get deleted.");
-            [[RHEndpointsAdapter sharedInstance] showErrorMessage:error];
+            [RHDialogUtils showErrorDialog:error];
         }
     }];
 }
