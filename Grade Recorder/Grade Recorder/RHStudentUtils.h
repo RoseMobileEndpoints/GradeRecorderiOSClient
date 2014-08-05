@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface RHStudentAdapter : NSObject
+@interface RHStudentUtils : NSObject
 
 + (BOOL) updateStudentRosterWithCallback:(void (^)()) callback;
 + (NSArray*) getStudents; // Returns an array of all GTLGraderecorderStudents.

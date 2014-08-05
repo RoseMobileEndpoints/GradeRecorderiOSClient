@@ -12,7 +12,7 @@
 
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryDetailViewController_iPhone.h"
-#import "RHStudentAdapter.h"
+#import "RHStudentUtils.h"
 
 #define kGradeEntryCellIdentifier @"GradeEntryCell"
 #define kLoadingGradeEntriesCellIdentifier @"LoadingGradeEntriesCell"
@@ -54,7 +54,7 @@
 
 - (NSDictionary*) studentMap {
     if (_studentMap == nil) {
-        _studentMap = [RHStudentAdapter getStudentMap];
+        _studentMap = [RHStudentUtils getStudentMap];
     }
     return _studentMap;
 }
@@ -162,7 +162,7 @@
 // Called when a button is clicked. The view will be automatically dismissed after this call returns
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        [RHStudentAdapter updateStudentRosterWithCallback:^{
+        [RHStudentUtils updateStudentRosterWithCallback:^{
             NSLog(@"Roster up to date.  Refresh table.");
             [self.tableView reloadData];
         }];
@@ -200,7 +200,7 @@
         case 2: {
             // Update Student Roster
             NSLog(@"Refresh student roster");
-            [RHStudentAdapter updateStudentRosterWithCallback:^{
+            [RHStudentUtils updateStudentRosterWithCallback:^{
                 NSLog(@"Roster up to date.  Refresh table.");
                 [self.tableView reloadData];
             }];

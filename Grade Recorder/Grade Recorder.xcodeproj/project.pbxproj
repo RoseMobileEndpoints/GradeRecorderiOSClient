@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FD101EE8198FD894002175DF /* RHStudentAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101EE7198FD894002175DF /* RHStudentAdapter.m */; };
+		FD101EE8198FD894002175DF /* RHStudentUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101EE7198FD894002175DF /* RHStudentUtils.m */; };
 		FD101FA91990296E002175DF /* GTLGraderecorderStudent+Customization.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101FA81990296E002175DF /* GTLGraderecorderStudent+Customization.m */; };
 		FD1C8E87198BCE39001E31D7 /* GTLGraderecorderAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E76198BCE39001E31D7 /* GTLGraderecorderAssignment.m */; };
 		FD1C8E88198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E78198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m */; };
@@ -79,8 +79,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		FD101EE6198FD894002175DF /* RHStudentAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHStudentAdapter.h; sourceTree = "<group>"; };
-		FD101EE7198FD894002175DF /* RHStudentAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHStudentAdapter.m; sourceTree = "<group>"; };
+		FD101EE6198FD894002175DF /* RHStudentUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHStudentUtils.h; sourceTree = "<group>"; };
+		FD101EE7198FD894002175DF /* RHStudentUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHStudentUtils.m; sourceTree = "<group>"; };
 		FD101FA71990296E002175DF /* GTLGraderecorderStudent+Customization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTLGraderecorderStudent+Customization.h"; sourceTree = "<group>"; };
 		FD101FA81990296E002175DF /* GTLGraderecorderStudent+Customization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTLGraderecorderStudent+Customization.m"; sourceTree = "<group>"; };
 		FD1C8E74198BCE39001E31D7 /* GTLGraderecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLGraderecorder.h; sourceTree = "<group>"; };
@@ -223,6 +223,17 @@
 			name = Customization;
 			sourceTree = "<group>";
 		};
+		FD101FAA1990749E002175DF /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				FDF54544180A431400BFDC16 /* RHEndpointsAdapter.h */,
+				FDF54545180A431400BFDC16 /* RHEndpointsAdapter.m */,
+				FD101EE6198FD894002175DF /* RHStudentUtils.h */,
+				FD101EE7198FD894002175DF /* RHStudentUtils.m */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
 		FDF54487180A399300BFDC16 = {
 			isa = PBXGroup;
 			children = (
@@ -266,14 +277,11 @@
 				FDF544A5180A399300BFDC16 /* RHAppDelegate.m */,
 				FDF544AA180A399300BFDC16 /* Images.xcassets */,
 				FDF544A7180A399300BFDC16 /* Grade_Recorder.xcdatamodeld */,
-				FDF5449C180A399300BFDC16 /* Supporting Files */,
-				FDF544D6180A3C3100BFDC16 /* iPhone */,
-				FDF54544180A431400BFDC16 /* RHEndpointsAdapter.h */,
-				FDF54545180A431400BFDC16 /* RHEndpointsAdapter.m */,
+				FDF544D6180A3C3100BFDC16 /* iPhone View Controllers */,
+				FD101FAA1990749E002175DF /* Utils */,
 				FDF5454B180A495A00BFDC16 /* RHLoginViewController.h */,
 				FDF5454C180A495A00BFDC16 /* RHLoginViewController.m */,
-				FD101EE6198FD894002175DF /* RHStudentAdapter.h */,
-				FD101EE7198FD894002175DF /* RHStudentAdapter.m */,
+				FDF5449C180A399300BFDC16 /* Supporting Files */,
 			);
 			path = "Grade Recorder";
 			sourceTree = "<group>";
@@ -307,7 +315,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		FDF544D6180A3C3100BFDC16 /* iPhone */ = {
+		FDF544D6180A3C3100BFDC16 /* iPhone View Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				FDF544D7180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard */,
@@ -318,7 +326,7 @@
 				FDF544D0180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.h */,
 				FDF544D1180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m */,
 			);
-			name = iPhone;
+			name = "iPhone View Controllers";
 			sourceTree = "<group>";
 		};
 		FDF5452F180A429800BFDC16 /* Google iOS Library */ = {
@@ -516,7 +524,7 @@
 				FDF5454D180A495A00BFDC16 /* RHLoginViewController.m in Sources */,
 				FDF54546180A431400BFDC16 /* RHEndpointsAdapter.m in Sources */,
 				FD4AF54E182C9CFA001554F3 /* GTMGatherInputStream.m in Sources */,
-				FD101EE8198FD894002175DF /* RHStudentAdapter.m in Sources */,
+				FD101EE8198FD894002175DF /* RHStudentUtils.m in Sources */,
 				FD4AF54B182C9CFA001554F3 /* GTMHTTPFetcherLogging.m in Sources */,
 				FD1C8E8D198BCE39001E31D7 /* GTLGraderecorderStudentCollection.m in Sources */,
 				FD4AF541182C9CFA001554F3 /* GTLUploadParameters.m in Sources */,

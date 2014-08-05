@@ -12,7 +12,7 @@
 
 #import "GTLGraderecorderStudent+Customization.h"
 #import "RHEndpointsAdapter.h"
-#import "RHStudentAdapter.h"
+#import "RHStudentUtils.h"
 
 
 
@@ -30,7 +30,7 @@
     
     // In a real app you wouldn't be able to hardcode the class roster, but fine here.
     // This app is not ready to ship. :)
-    self.students = [[RHStudentAdapter getStudents] sortedArrayUsingSelector:@selector(compareFirstLast:)];
+    self.students = [[RHStudentUtils getStudents] sortedArrayUsingSelector:@selector(compareFirstLast:)];
     
 }
 
@@ -130,7 +130,7 @@
         case 3:
             // Refresh student roster
             NSLog(@"Refresh student roster");
-            [RHStudentAdapter updateStudentRosterWithCallback:^{
+            [RHStudentUtils updateStudentRosterWithCallback:^{
                 NSLog(@"TODO: Refresh the picker data.");
             }];
             break;

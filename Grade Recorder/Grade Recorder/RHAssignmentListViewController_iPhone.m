@@ -12,7 +12,7 @@
 
 #import "RHEndpointsAdapter.h"
 #import "RHGradeEntryListViewController_iPhone.h"
-#import "RHStudentAdapter.h"
+#import "RHStudentUtils.h"
 
 #define kAssignmentCellIdentifier @"AssignmentCell"
 #define kLoadingAssignmentsCellIdentifier @"LoadingAssignmentsCell"
@@ -48,8 +48,8 @@
 
 
 - (void) viewDidAppear:(BOOL) animated {
-    if ([RHStudentAdapter getStudents] == nil) {
-        [RHStudentAdapter updateStudentRosterWithCallback:nil]; // No action needed when complete.
+    if ([RHStudentUtils getStudents] == nil) {
+        [RHStudentUtils updateStudentRosterWithCallback:nil]; // No action needed when complete.
     }
 }
 
@@ -220,7 +220,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
         case 3:
             // Update Student Roster
             NSLog(@"Refresh student roster");
-            [RHStudentAdapter updateStudentRosterWithCallback:nil];
+            [RHStudentUtils updateStudentRosterWithCallback:nil];
             break;
         case 4:
             // Check for new grades (also done via pull down to refresh)

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Rose-Hulman. All rights reserved.
 //
 
-#import "RHStudentAdapter.h"
+#import "RHStudentUtils.h"
 
 #import "GTLGraderecorder.h"
 
@@ -17,7 +17,7 @@ static NSMutableArray* __students;
 static NSMutableDictionary* __studentMap;
 
 
-@implementation RHStudentAdapter
+@implementation RHStudentUtils
 
 // Returns NO if the query is already in progress.
 + (BOOL) updateStudentRosterWithCallback:(void (^)()) callback {
