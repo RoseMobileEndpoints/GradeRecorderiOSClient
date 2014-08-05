@@ -23,7 +23,11 @@
 
 @interface RHGradeEntryListViewController_iPhone ()
 @property (nonatomic) BOOL initialQueryComplete;
-@property (nonatomic, weak) NSDictionary* studentMap;
+@property (nonatomic, strong) NSMutableArray* gradeEntries; // of GTLGraderecorderGradeEntry
+@property (nonatomic, weak) NSDictionary* studentMap; // of NSString (entityKey) to GTLGraderecorderStudent
+@property (nonatomic, weak) NSDictionary* teamMap; // of NSString to NSArray (of GTLGraderecorderStudent)
+@property (nonatomic, strong) NSArray* teams; // of NSString
+@property (nonatomic, strong) NSDictionary* scoresMap; // of NSString (student entityKey) to NSNumber.
 @end
 
 @implementation RHGradeEntryListViewController_iPhone
@@ -53,6 +57,7 @@
     _assignment = assignment;
 }
 
+
 - (NSDictionary*) studentMap {
     if (_studentMap == nil) {
         _studentMap = [RHStudentUtils getStudentMap];
@@ -60,13 +65,43 @@
     return _studentMap;
 }
 
+
+- (NSDictionary*) teamMap {
+    if (_teamMap == nil) {
+        _teamMap = [RHStudentUtils getTeamMap];
+    }
+    return _teamMap;
+}
+
+
+- (NSArray*) teams {
+    if (_teams == nil) {
+        // Build the teams array from the teamsMap
+        _teams = [[self.teamMap allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    }
+    return _teams;
+}
+
+
+- (NSDictionary*) scoresMap {
+    if (_scoresMap == nil) {
+        NSMutableDictionary* temp = [[NSMutableDictionary alloc] init];
+        for (GTLGraderecorderGradeEntry* grade in self.gradeEntries) {
+            [temp setObject:grade.score forKey:grade.studentKey];
+        }
+        _scoresMap = temp;
+    }
+    return _scoresMap;
+}
+
+
 - (IBAction) pressedOptionsButton:(id)sender {
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:@"Add a grade entry", @"Delete a grade entry",
-                                  @"Display by Team", @"Display First Last", @"Display Last, First",
+                                  @"Display by Team", @"Display by Student",
                                   @"Refresh student roster", @"Refresh Grade Entries", nil];
     [actionSheet showInView:self.view];
 }
@@ -75,7 +110,14 @@
 #pragma mark - Table view data source
 
 - (NSInteger) tableView:(UITableView*) tableView numberOfRowsInSection:(NSInteger) section {
-    return self.gradeEntries.count == 0 ? 1 : self.gradeEntries.count;
+    if (self.gradeEntries.count == 0) {
+        return 1;
+    }
+    if (self.displayGradesByTeam) {
+        return self.teams.count;
+    } else {
+        return self.gradeEntries.count;
+    }
 }
 
 
@@ -93,17 +135,35 @@
         }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:kGradeEntryCellIdentifier forIndexPath:indexPath];
-        GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
-        GTLGraderecorderStudent* student = [self.studentMap objectForKey:currentRowGradeEntry.studentKey];
-        if (student != nil) {
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", student.firstName, student.lastName];
+        if (self.displayGradesByTeam) {
+            NSString* team = self.teams[indexPath.row];
+            cell.textLabel.text = team;
+            NSArray* teamMembers = [self.teamMap objectForKey:team];
+            NSMutableString* scoresString = [[NSMutableString alloc] init];
+            for (GTLGraderecorderStudent* teamMember in teamMembers) {
+                NSNumber* scoreForStudent = [self.scoresMap objectForKey:teamMember.entityKey];
+                if (scoreForStudent) {
+                    if (scoresString.length > 0) {
+                        [scoresString appendString:@", "];
+                    }
+                    [scoresString appendFormat:@"%@", scoreForStudent];
+                }
+            }
+            cell.detailTextLabel.text = scoresString;
         } else {
-            cell.textLabel.text = @"Missing name";
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+            // Displaying in student mode is easy.  Each grade entry is a row.
+            GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
+            GTLGraderecorderStudent* student = [self.studentMap objectForKey:currentRowGradeEntry.studentKey];
+            if (student != nil) {
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                cell.textLabel.text = [NSString stringWithFormat:@"%@ %@", student.firstName, student.lastName];
+            } else {
+                cell.textLabel.text = @"Missing name";
+                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
 
+            }
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", currentRowGradeEntry.score];
         }
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", currentRowGradeEntry.score];
     }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
@@ -202,14 +262,15 @@
             break;
         case 2:
             NSLog(@"Display by Team");
+            self.displayGradesByTeam = YES;
+            [self.tableView reloadData];
             break;
         case 3:
-            NSLog(@"Display First Last");
+            NSLog(@"Display by Student");
+            self.displayGradesByTeam = NO;
+            [self.tableView reloadData];
             break;
-        case 4:
-            NSLog(@"Display Last, First");
-            break;
-        case 5: {
+        case 4: {
             // Update Student Roster
             NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
@@ -218,8 +279,8 @@
             }];
         }
             break;
-        case 6:
-            // Force sync
+        case 5:
+            // Refresh the grade entries.
             NSLog(@"Refresh Grade Entries");
             [self _queryForGradeEntries];
             break;
@@ -229,6 +290,8 @@
 
 #pragma mark - Performing Endpoints Queries
 
+// TODO: Refactor to allow more than 50 grades in an assignment.
+// TODO: Set the order.  The order is actually not being set.  It is fortunate to be in order.
 - (void) _queryForGradeEntries {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];

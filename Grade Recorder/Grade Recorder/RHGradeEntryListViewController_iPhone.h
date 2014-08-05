@@ -12,8 +12,8 @@
 @interface RHGradeEntryListViewController_iPhone : UITableViewController <UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) GTLGraderecorderAssignment* assignment;
-@property (nonatomic, strong) NSMutableArray* gradeEntries;
-@property (strong, nonatomic) IBOutlet UIBarButtonItem *optionsBarButton;
+@property (nonatomic, strong) IBOutlet UIBarButtonItem* optionsBarButton;
+@property (nonatomic) BOOL displayGradesByTeam;
 
 - (IBAction) pressedOptionsButton:(id) sender;
 
