@@ -15,10 +15,9 @@
 
 @property (nonatomic, strong) GTLGraderecorderAssignment* parentAssignment;
 @property (nonatomic, strong) GTLGraderecorderGradeEntry* gradeEntry; // Optional: Pass a grade to pre-populate fields.
-//@property (nonatomic) BOOL entryGradesByTeam;  // TODO: Implement this feature.
-@property (nonatomic, strong) NSArray* students;
+@property (nonatomic) BOOL enterGradesByTeam;
 
-@property (weak, nonatomic) IBOutlet UIPickerView* studentNamePicker;
+@property (weak, nonatomic) IBOutlet UIPickerView* studentOrTeamPicker;
 @property (weak, nonatomic) IBOutlet UITextField* scoreTextField;
 @property (strong, nonatomic) IBOutlet UITextView* statusTextView;
 

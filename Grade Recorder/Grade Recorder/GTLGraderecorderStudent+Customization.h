@@ -11,5 +11,6 @@
 @interface GTLGraderecorderStudent (Customization)
 
 - (NSComparisonResult) compareFirstLast:(GTLGraderecorderStudent*) otherStudent;
+- (NSComparisonResult) compareLastFirst:(GTLGraderecorderStudent*) otherStudent;
 
 @end

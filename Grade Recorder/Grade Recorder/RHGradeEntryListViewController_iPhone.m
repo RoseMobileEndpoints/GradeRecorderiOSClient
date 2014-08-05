@@ -65,7 +65,9 @@
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Add a grade entry", @"Delete a grade entry", @"Refresh student roster", @"Refresh Grade Entries", nil];
+                                                    otherButtonTitles:@"Add a grade entry", @"Delete a grade entry",
+                                  @"Display by Team", @"Display First Last", @"Display Last, First",
+                                  @"Refresh student roster", @"Refresh Grade Entries", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -198,7 +200,16 @@
             NSLog(@"Delete an grade entry");
             [self setEditing:YES animated:YES];
             break;
-        case 2: {
+        case 2:
+            NSLog(@"Display by Team");
+            break;
+        case 3:
+            NSLog(@"Display First Last");
+            break;
+        case 4:
+            NSLog(@"Display Last, First");
+            break;
+        case 5: {
             // Update Student Roster
             NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
@@ -207,7 +218,7 @@
             }];
         }
             break;
-        case 3:
+        case 6:
             // Force sync
             NSLog(@"Refresh Grade Entries");
             [self _queryForGradeEntries];

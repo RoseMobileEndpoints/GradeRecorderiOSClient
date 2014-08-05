@@ -20,6 +20,9 @@
 #define kDefaultScoreString @"100"
 
 @interface RHGradeEntryDetailViewController_iPhone ()
+@property (nonatomic, strong) NSArray* students; // of GTLGraderecorderStudent
+@property (nonatomic, strong) NSArray* teams;  // of NSString
+@property (nonatomic, strong) NSDictionary* teamMap;  // of NSString to NSArray (of GTLGraderecorderStudent)
 @end
 
 @implementation RHGradeEntryDetailViewController_iPhone
@@ -28,44 +31,71 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
-    // In a real app you wouldn't be able to hardcode the class roster, but fine here.
-    // This app is not ready to ship. :)
-    self.students = [[RHStudentUtils getStudents] sortedArrayUsingSelector:@selector(compareFirstLast:)];
-    
 }
 
 
-- (void) viewWillAppear:(BOOL)animated {
-    NSInteger studentIndex = 0;
+- (void) viewWillAppear:(BOOL) animated {
+    [super viewWillAppear:animated];
+    [self _reloadPickerData];
+}
+
+
+
+- (void) _reloadPickerData {
+    self.students = [[RHStudentUtils getStudents] sortedArrayUsingSelector:@selector(compareLastFirst:)];
+    self.teamMap = [RHStudentUtils getTeamMap];
+    self.teams = [[self.teamMap allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    [self.studentOrTeamPicker reloadComponent:0];
+    [self _populateFieldsUsingGradeEntry];
+}
+
+
+- (void) _populateFieldsUsingGradeEntry {
+    // Prepopulate grade entry information if self.gradeEntry is set.
+    NSInteger rowToSelectInPicker = 0;
     if (self.gradeEntry != nil) {
         self.scoreTextField.text = [self.gradeEntry.score description];
         for (NSInteger i = 0; i < self.students.count; ++i) {
-            if ([self.gradeEntry.studentKey isEqualToString:((GTLGraderecorderStudent*)self.students[i]).entityKey]) {
-                studentIndex = i;
+            GTLGraderecorderStudent* student = self.students[i];
+            if ([self.gradeEntry.studentKey isEqualToString:student.entityKey]) {
+                if (self.enterGradesByTeam) {
+                    NSUInteger searchResult = [self.teams indexOfObject:student.team];
+                    if (searchResult != NSNotFound) {
+                        rowToSelectInPicker = searchResult;
+                    }
+                } else {
+                    rowToSelectInPicker = i;
+                }
                 break;
             }
         }
     } else {
         self.scoreTextField.text = kDefaultScoreString;
     }
-    [self.studentNamePicker selectRow:studentIndex inComponent:0 animated:NO];
+    [self.studentOrTeamPicker selectRow:rowToSelectInPicker inComponent:0 animated:NO];
     [self.scoreTextField becomeFirstResponder];
 }
 
 
-- (IBAction)pressedInsertButton:(id)sender {
-    NSInteger selectedRow = [self.studentNamePicker selectedRowInComponent:0];
-    GTLGraderecorderStudent* student = self.students[selectedRow];
+- (IBAction) pressedInsertButton:(id) sender {
+    NSInteger selectedRow = [self.studentOrTeamPicker selectedRowInComponent:0];
     NSNumber* score = [NSNumber numberWithLong:[self.scoreTextField.text integerValue]];
     [self.scoreTextField resignFirstResponder];
-    self.statusTextView.text = [NSString stringWithFormat:@"Saving...\n    Student name: %@\n    Score: %@", student, score];
-    
-    GTLGraderecorderGradeEntry* newGradeEntry = [[GTLGraderecorderGradeEntry alloc] init];
-    newGradeEntry.assignmentKey = self.parentAssignment.entityKey;
-    newGradeEntry.studentKey = student.entityKey;
-    newGradeEntry.score = score;
-    [self _insertGradeEntry:newGradeEntry];
+    if (self.enterGradesByTeam) {
+        NSString* team = self.teams[selectedRow];
+        NSArray* teamMembers = [self.teamMap objectForKey:team];
+        self.statusTextView.text = [NSString stringWithFormat:@"Saving...\n    Team: %@\n    Score: %@",
+                                    team, score];
+        for (GTLGraderecorderStudent* teamMember in teamMembers) {
+            [self _insertGradeEntryForStudentKey:teamMember.entityKey withScore:score];
+        }
+
+    } else {
+        GTLGraderecorderStudent* student = self.students[selectedRow];
+        self.statusTextView.text = [NSString stringWithFormat:@"Saving...\n    Student name: %@ %@\n    Score: %@",
+                                    student.firstName, student.lastName, score];
+        [self _insertGradeEntryForStudentKey:student.entityKey withScore:score];
+    }
 }
 
 
@@ -74,7 +104,8 @@
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Enter grades by Team", @"Student: First Last", @"Student: Last, First", @"Refresh student roster", nil];
+                                                    otherButtonTitles:@"Enter grades by Team",
+                                  @"Enter grades by Student", @"Refresh student roster", nil];
     [actionSheet showInView:self.view];
 
 }
@@ -87,18 +118,24 @@
     return 1;
 }
 
+
 // returns the # of rows in each component..
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    return self.students.count;
+    return self.enterGradesByTeam ? self.teams.count : self.students.count;
 }
 
 
 #pragma mark - UIPickerViewDelegate
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    GTLGraderecorderStudent* student = self.students[row];
-    return [NSString stringWithFormat:@"%@ %@", student.firstName, student.lastName];
+    if (self.enterGradesByTeam) {
+        return self.teams[row];
+    } else {
+        GTLGraderecorderStudent* student = self.students[row];
+        return [NSString stringWithFormat:@"%@ %@", student.firstName, student.lastName];
+    }
 }
+
 
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
     //NSLog(@"You just stopped the wheel on %@", self.studentNames[row]);
@@ -111,6 +148,7 @@
     [textField resignFirstResponder];
 }
 
+
 #pragma mark - UIActionSheetDelegate
 
 - (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -120,19 +158,20 @@
     }
     switch (buttonIndex) {
         case 0:
-            // Enter grades by team
+            // Enter grades by Team
+            self.enterGradesByTeam = YES;
+            [self _reloadPickerData];
             break;
         case 1:
-            // Enter grades by team student First Last
+            // Enter grades by Student
+            self.enterGradesByTeam = NO;
+            [self _reloadPickerData];
             break;
         case 2:
-            // Enter grades by team student Last, First
-            break;
-        case 3:
             // Refresh student roster
             NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
-                NSLog(@"TODO: Refresh the picker data.");
+                [self _reloadPickerData];
             }];
             break;
     }
@@ -140,6 +179,15 @@
 
 
 #pragma mark - Endpoints methods
+
+- (void) _insertGradeEntryForStudentKey:(NSString*) studentKey withScore:(NSNumber*) score {
+    GTLGraderecorderGradeEntry* newGradeEntry = [[GTLGraderecorderGradeEntry alloc] init];
+    newGradeEntry.assignmentKey = self.parentAssignment.entityKey;
+    newGradeEntry.studentKey = studentKey;
+    newGradeEntry.score = score;
+    [self _insertGradeEntry:newGradeEntry];
+}
+
 
 - (void) _insertGradeEntry:(GTLGraderecorderGradeEntry*) gradeEntry {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];

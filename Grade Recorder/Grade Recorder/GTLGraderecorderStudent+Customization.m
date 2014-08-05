@@ -25,4 +25,17 @@
     return [self.roseUsername compare:otherStudent.roseUsername];
 }
 
+
+- (NSComparisonResult) compareLastFirst:(GTLGraderecorderStudent*) otherStudent {
+    NSComparisonResult lastNameCompare = [self.lastName compare:otherStudent.lastName];
+    if (lastNameCompare != NSOrderedSame) {
+        return lastNameCompare;
+    }
+    NSComparisonResult firstNameCompare = [self.firstName compare:otherStudent.firstName];
+    if (firstNameCompare != NSOrderedSame) {
+        return firstNameCompare;
+    }
+    return [self.roseUsername compare:otherStudent.roseUsername];
+}
+
 @end

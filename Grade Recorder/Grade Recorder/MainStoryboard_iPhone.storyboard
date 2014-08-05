@@ -289,7 +289,7 @@
                     <connections>
                         <outlet property="scoreTextField" destination="3jg-pf-w2A" id="S1e-Ur-i00"/>
                         <outlet property="statusTextView" destination="5vp-nP-mMg" id="S4T-E4-arT"/>
-                        <outlet property="studentNamePicker" destination="pDc-g6-YWL" id="lef-Qk-4Wx"/>
+                        <outlet property="studentOrTeamPicker" destination="pDc-g6-YWL" id="AmD-6F-CfO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x8S-WD-ouE" userLabel="First Responder" sceneMemberID="firstResponder"/>

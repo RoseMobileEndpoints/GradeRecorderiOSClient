@@ -11,7 +11,8 @@
 @interface RHStudentUtils : NSObject
 
 + (BOOL) updateStudentRosterWithCallback:(void (^)()) callback;
-+ (NSArray*) getStudents; // Returns an array of all GTLGraderecorderStudents.
-+ (NSDictionary*) getStudentMap; // Return map of entityKey to GTLGraderecorderStudents.
++ (NSArray*) getStudents; // Array of all GTLGraderecorderStudents.
++ (NSDictionary*) getStudentMap; // Map of NSString (entityKey) to GTLGraderecorderStudents.
++ (NSDictionary*) getTeamMap; // Map of NSString to NSArray (of GTLGraderecorderStudents).
 
 @end

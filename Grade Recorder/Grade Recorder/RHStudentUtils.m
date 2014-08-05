@@ -16,6 +16,7 @@
 static BOOL __isQueryInProgress;
 static NSMutableArray* __students;
 static NSMutableDictionary* __studentMap;
+static NSMutableDictionary* __teamMap;
 
 
 @implementation RHStudentUtils
@@ -29,20 +30,16 @@ static NSMutableDictionary* __studentMap;
     __isQueryInProgress = YES;
     __students = [[NSMutableArray alloc] init];
     __studentMap = [[NSMutableDictionary alloc] init];
+    __teamMap = [[NSMutableDictionary alloc] init];
     [self _queryForStudentsWithPageToken:nil withCallback:callback];
     return YES;
 }
 
 
-// Returns an array of all GTLGraderecorderStudents
-+ (NSArray*) getStudents {
-    return __students;
-}
-
-
-+ (NSDictionary*) getStudentMap {
-    return __studentMap;
-}
+// Returning data structures.
++ (NSArray*) getStudents { return __students; }
++ (NSDictionary*) getStudentMap { return __studentMap; }
++ (NSDictionary*) getTeamMap { return __teamMap; }
 
 
 + (void) _queryForStudentsWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
@@ -62,10 +59,18 @@ static NSMutableDictionary* __studentMap;
             return;
         }
 
-        // Add the new students to the array and the map.
+        // Add the new students to the array and the maps.
         [__students addObjectsFromArray:studentCollection.items];
         for (GTLGraderecorderStudent* student in studentCollection.items) {
             [__studentMap setObject:student forKey:student.entityKey];
+
+            // Add this student to the array of students for the team.
+            NSMutableArray* teamMembers = [__teamMap objectForKey:student.team];
+            if (teamMembers == nil) {
+                teamMembers = [[NSMutableArray alloc] init]; // First student on team.
+            }
+            [teamMembers addObject:student];
+            [__teamMap setObject:teamMembers forKey:student.team];
         }
 
         // See if there are more students on the server.
