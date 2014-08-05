@@ -43,8 +43,10 @@
 
 
 - (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.title = self.assignment.name;
     self.initialQueryComplete = NO;
+    self.gradeEntryMap = nil; // Reset the gradeEntryMap in case the detail view changed the data.
     [self.tableView reloadData];
     [self _queryForGradeEntries];
 }
@@ -189,14 +191,32 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
-        [self _deleteGradeEntry: currentRowGradeEntry.entityKey];
-        [self.gradeEntries removeObjectAtIndex:indexPath.row];
-        if (self.gradeEntries.count == 0) {
+        if (self.displayGradesByTeam) {
+            NSString* team = self.teams[indexPath.row];
+            NSArray* teamMembers = [self.teamMap objectForKey:team];
+            for (GTLGraderecorderStudent* teamMember in teamMembers) {
+                GTLGraderecorderGradeEntry* potentialGrade = [self.gradeEntryMap objectForKey:teamMember.entityKey];
+                if (potentialGrade) {
+                    [self _deleteGradeEntry: potentialGrade.entityKey];
+                    [self.gradeEntries removeObject:potentialGrade];
+                    self.gradeEntryMap = nil; // Reset the map since the array data has changed.
+                }
+            }
             [tableView reloadData];
-            [self setEditing:NO animated:YES];
         } else {
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
+            [self _deleteGradeEntry: currentRowGradeEntry.entityKey];
+            [self.gradeEntries removeObjectAtIndex:indexPath.row];
+            self.gradeEntryMap = nil; // Reset the map since the array data has changed.
+            if (self.gradeEntries.count == 0) {
+                [tableView reloadData];
+                [self setEditing:NO animated:YES];
+            } else {
+                [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+        }
+        if (self.gradeEntries.count == 0) {
+            [self setEditing:NO animated:YES];
         }
     }
 }
@@ -215,7 +235,6 @@
                 break; // Found a grade entry for some member of the team.
             }
         }
-
     } else {
         currentRowGradeEntry = self.gradeEntries[indexPath.row];
     }
@@ -307,7 +326,6 @@
 // TODO: Refactor to allow more than 50 grades in an assignment.
 // TODO: Set the order.  The order is actually not being set.  It is fortunate to be in order.
 - (void) _queryForGradeEntries {
-    self.gradeEntryMap = nil;
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
     query.limit = 50;
@@ -317,6 +335,7 @@
         self.initialQueryComplete = YES;
         if (error == nil) {
             self.gradeEntries = [gradeEntryCollection.items mutableCopy];
+            self.gradeEntryMap = nil;
             if (gradeEntryCollection.nextPageToken != nil) {
                 NSLog(@"TODO: query for more grade entries using %@", gradeEntryCollection.nextPageToken);
             }
