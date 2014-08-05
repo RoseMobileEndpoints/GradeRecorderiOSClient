@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FD101EE8198FD894002175DF /* RHStudentAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101EE7198FD894002175DF /* RHStudentAdapter.m */; };
+		FD101FA91990296E002175DF /* GTLGraderecorderStudent+Customization.m in Sources */ = {isa = PBXBuildFile; fileRef = FD101FA81990296E002175DF /* GTLGraderecorderStudent+Customization.m */; };
 		FD1C8E87198BCE39001E31D7 /* GTLGraderecorderAssignment.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E76198BCE39001E31D7 /* GTLGraderecorderAssignment.m */; };
 		FD1C8E88198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E78198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m */; };
 		FD1C8E89198BCE39001E31D7 /* GTLGraderecorderConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = FD1C8E7A198BCE39001E31D7 /* GTLGraderecorderConstants.m */; };
@@ -80,6 +81,8 @@
 /* Begin PBXFileReference section */
 		FD101EE6198FD894002175DF /* RHStudentAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHStudentAdapter.h; sourceTree = "<group>"; };
 		FD101EE7198FD894002175DF /* RHStudentAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHStudentAdapter.m; sourceTree = "<group>"; };
+		FD101FA71990296E002175DF /* GTLGraderecorderStudent+Customization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GTLGraderecorderStudent+Customization.h"; sourceTree = "<group>"; };
+		FD101FA81990296E002175DF /* GTLGraderecorderStudent+Customization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GTLGraderecorderStudent+Customization.m"; sourceTree = "<group>"; };
 		FD1C8E74198BCE39001E31D7 /* GTLGraderecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLGraderecorder.h; sourceTree = "<group>"; };
 		FD1C8E75198BCE39001E31D7 /* GTLGraderecorderAssignment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLGraderecorderAssignment.h; sourceTree = "<group>"; };
 		FD1C8E76198BCE39001E31D7 /* GTLGraderecorderAssignment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLGraderecorderAssignment.m; sourceTree = "<group>"; };
@@ -211,6 +214,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FD101FA619902938002175DF /* Customization */ = {
+			isa = PBXGroup;
+			children = (
+				FD101FA71990296E002175DF /* GTLGraderecorderStudent+Customization.h */,
+				FD101FA81990296E002175DF /* GTLGraderecorderStudent+Customization.m */,
+			);
+			name = Customization;
+			sourceTree = "<group>";
+		};
 		FDF54487180A399300BFDC16 = {
 			isa = PBXGroup;
 			children = (
@@ -247,8 +259,9 @@
 		FDF5449B180A399300BFDC16 /* Grade Recorder */ = {
 			isa = PBXGroup;
 			children = (
-				FDF54543180A42BD00BFDC16 /* Graderecorder API */,
 				FDF5452F180A429800BFDC16 /* Google iOS Library */,
+				FDF54543180A42BD00BFDC16 /* Graderecorder API */,
+				FD101FA619902938002175DF /* Customization */,
 				FDF544A4180A399300BFDC16 /* RHAppDelegate.h */,
 				FDF544A5180A399300BFDC16 /* RHAppDelegate.m */,
 				FDF544AA180A399300BFDC16 /* Images.xcassets */,
@@ -532,6 +545,7 @@
 				FD4AF54D182C9CFA001554F3 /* GTMHTTPUploadFetcher.m in Sources */,
 				FD4AF542182C9CFA001554F3 /* GTLDateTime.m in Sources */,
 				FDF544A9180A399300BFDC16 /* Grade_Recorder.xcdatamodeld in Sources */,
+				FD101FA91990296E002175DF /* GTLGraderecorderStudent+Customization.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

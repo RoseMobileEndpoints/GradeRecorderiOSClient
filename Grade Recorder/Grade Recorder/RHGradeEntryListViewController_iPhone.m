@@ -178,7 +178,6 @@
         RHGradeEntryDetailViewController_iPhone* destination = segue.destinationViewController;
         destination.gradeEntry = sender;
         destination.parentAssignment = self.assignment;
-        destination.allGradesForAssignment = self.gradeEntries;
     }
 }
 
