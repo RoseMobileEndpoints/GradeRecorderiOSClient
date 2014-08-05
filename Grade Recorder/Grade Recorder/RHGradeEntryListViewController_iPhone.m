@@ -48,7 +48,9 @@
     self.initialQueryComplete = NO;
     self.gradeEntryMap = nil; // Reset the gradeEntryMap in case the detail view changed the data.
     [self.tableView reloadData];
-    [self _queryForGradeEntries];
+    [self _queryForGradeEntriesWithPageToken:nil withCallback:^{
+        NSLog(@"Initial query for grades is complete.");
+    }];
 }
 
 
@@ -59,6 +61,12 @@
     _assignment = assignment;
 }
 
+- (NSMutableArray*) gradeEntries {
+    if (_gradeEntries == nil) {
+        _gradeEntries = [[NSMutableArray alloc] init];
+    }
+    return _gradeEntries;
+}
 
 - (NSDictionary*) studentMap {
     if (_studentMap == nil) {
@@ -221,6 +229,7 @@
     }
 }
 
+
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.gradeEntries.count == 0) {
         return;
@@ -315,7 +324,9 @@
         case 5:
             // Refresh the grade entries.
             NSLog(@"Refresh Grade Entries");
-            [self _queryForGradeEntries];
+            [self _queryForGradeEntriesWithPageToken:nil withCallback:^{
+                NSLog(@"All the grades have loaded");
+            }];
             break;
     }
 }
@@ -323,21 +334,31 @@
 
 #pragma mark - Performing Endpoints Queries
 
-// TODO: Refactor to allow more than 50 grades in an assignment.
 // TODO: Set the order.  The order is actually not being set.  It is fortunate to be in order.
-- (void) _queryForGradeEntries {
+- (void) _queryForGradeEntriesWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
-    query.limit = 50;
+    query.limit = 20;
+    query.pageToken = pageToken;
+    if (pageToken == nil) {
+        self.gradeEntries = nil;
+    }
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderGradeEntryCollection* gradeEntryCollection, NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         self.initialQueryComplete = YES;
         if (error == nil) {
-            self.gradeEntries = [gradeEntryCollection.items mutableCopy];
-            self.gradeEntryMap = nil;
+            [self.gradeEntries addObjectsFromArray:gradeEntryCollection.items];
+            self.gradeEntryMap = nil; // Anytime the gradeEntries change reset the map.
             if (gradeEntryCollection.nextPageToken != nil) {
-                NSLog(@"TODO: query for more grade entries using %@", gradeEntryCollection.nextPageToken);
+                NSLog(@"Finished query but there are more grades!  So far we have %d students.", (int)self.gradeEntries.count);
+                [self _queryForGradeEntriesWithPageToken:gradeEntryCollection.nextPageToken
+                                            withCallback:callback];
+            } else {
+                NSLog(@"Found %d grades for assignment %@.", (int)self.gradeEntries.count, self.assignment.name);
+                if (callback) {
+                    callback();
+                }
             }
         } else {
             [RHDialogUtils showErrorDialog:error];
