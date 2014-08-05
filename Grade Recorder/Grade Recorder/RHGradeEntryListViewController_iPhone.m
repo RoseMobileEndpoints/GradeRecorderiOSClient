@@ -27,7 +27,7 @@
 @property (nonatomic, weak) NSDictionary* studentMap; // of NSString (entityKey) to GTLGraderecorderStudent
 @property (nonatomic, weak) NSDictionary* teamMap; // of NSString to NSArray (of GTLGraderecorderStudent)
 @property (nonatomic, strong) NSArray* teams; // of NSString
-@property (nonatomic, strong) NSDictionary* scoresMap; // of NSString (student entityKey) to NSNumber.
+@property (nonatomic, strong) NSDictionary* gradeEntryMap; // of NSString (student entityKey) to GTLGraderecorderGradeEntry.
 @end
 
 @implementation RHGradeEntryListViewController_iPhone
@@ -83,15 +83,15 @@
 }
 
 
-- (NSDictionary*) scoresMap {
-    if (_scoresMap == nil) {
+- (NSDictionary*) gradeEntryMap {
+    if (_gradeEntryMap == nil) {
         NSMutableDictionary* temp = [[NSMutableDictionary alloc] init];
         for (GTLGraderecorderGradeEntry* grade in self.gradeEntries) {
-            [temp setObject:grade.score forKey:grade.studentKey];
+            [temp setObject:grade forKey:grade.studentKey];
         }
-        _scoresMap = temp;
+        _gradeEntryMap = temp;
     }
-    return _scoresMap;
+    return _gradeEntryMap;
 }
 
 
@@ -141,12 +141,12 @@
             NSArray* teamMembers = [self.teamMap objectForKey:team];
             NSMutableString* scoresString = [[NSMutableString alloc] init];
             for (GTLGraderecorderStudent* teamMember in teamMembers) {
-                NSNumber* scoreForStudent = [self.scoresMap objectForKey:teamMember.entityKey];
-                if (scoreForStudent) {
+                GTLGraderecorderGradeEntry* gradeEntryForStudent = [self.gradeEntryMap objectForKey:teamMember.entityKey];
+                if (gradeEntryForStudent) {
                     if (scoresString.length > 0) {
                         [scoresString appendString:@", "];
                     }
-                    [scoresString appendFormat:@"%@", scoreForStudent];
+                    [scoresString appendFormat:@"%@", gradeEntryForStudent.score];
                 }
             }
             cell.detailTextLabel.text = scoresString;
@@ -205,7 +205,20 @@
     if (self.gradeEntries.count == 0) {
         return;
     }
-    GTLGraderecorderGradeEntry* currentRowGradeEntry = self.gradeEntries[indexPath.row];
+    GTLGraderecorderGradeEntry* currentRowGradeEntry = nil;
+    if (self.displayGradesByTeam) {
+        NSString* team = self.teams[indexPath.row];
+        NSArray* teamMembers = [self.teamMap objectForKey:team];
+        for (GTLGraderecorderStudent* teamMember in teamMembers) {
+            currentRowGradeEntry = [self.gradeEntryMap objectForKey:teamMember.entityKey];
+            if (currentRowGradeEntry) {
+                break; // Found a grade entry for some member of the team.
+            }
+        }
+
+    } else {
+        currentRowGradeEntry = self.gradeEntries[indexPath.row];
+    }
     [self performSegueWithIdentifier:kPushGradeEntryDetailSegue sender:currentRowGradeEntry];
 }
 
@@ -236,11 +249,12 @@
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void) prepareForSegue:(UIStoryboardSegue*) segue sender:(id) sender {
     if ([segue.identifier isEqualToString:kPushGradeEntryDetailSegue]) {
         RHGradeEntryDetailViewController_iPhone* destination = segue.destinationViewController;
         destination.gradeEntry = sender;
         destination.parentAssignment = self.assignment;
+        destination.enterGradesByTeam = self.displayGradesByTeam;
     }
 }
 
@@ -293,6 +307,7 @@
 // TODO: Refactor to allow more than 50 grades in an assignment.
 // TODO: Set the order.  The order is actually not being set.  It is fortunate to be in order.
 - (void) _queryForGradeEntries {
+    self.gradeEntryMap = nil;
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
     query.limit = 50;
