@@ -22,6 +22,7 @@
 #define kPushGradeEntryListSeque @"PushGradeEntryListSeque"
 
 @interface RHAssignmentListViewController_iPhone ()
+@property (nonatomic, strong) NSMutableArray* assignments;
 @property (nonatomic) NSIndexPath* accessorySelectedIndexPath;
 @property (nonatomic) BOOL showingRenameButtons;
 @property (nonatomic) BOOL initialQueryComplete;
@@ -34,7 +35,7 @@
     self.navigationItem.hidesBackButton = YES;
     UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
-                       action:@selector(_queryForAssignments)
+                       action:@selector(_queryForAssignmentsWithPageToken:)
              forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
 }
@@ -44,7 +45,7 @@
     [super viewWillAppear:animated];
     self.showingRenameButtons = NO;
     self.initialQueryComplete = NO;
-    [self _queryForAssignments];
+    [self _queryForAssignmentsWithPageToken:nil];
 }
 
 
@@ -56,13 +57,13 @@
 }
 
 
-- (IBAction)pressedSignOut:(id)sender {
+- (IBAction) pressedSignOut:(id) sender {
     [RHOAuthUtils signOut];
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 
-- (IBAction)pressedOptions:(id)sender {
+- (IBAction) pressedOptions:(id) sender {
     NSString* toggleRenameButtonsTitle = self.showingRenameButtons ? @"Hide rename buttons" : @"Show rename buttons";
     UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
                                                              delegate:self
@@ -227,7 +228,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
         case 4:
             // Check for new grades (also done via pull down to refresh)
             NSLog(@"Requery for assignments");
-            [self _queryForAssignments];
+            [self _queryForAssignmentsWithPageToken:nil];
             break;
     }
 }
@@ -277,19 +278,28 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 
 #pragma mark - Performing Endpoints Queries
 
-- (void) _queryForAssignments {
+- (void) _queryForAssignmentsWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentList];
-    query.limit = 30;
+    query.limit = 20;
+    query.pageToken = pageToken;
+    if (pageToken == nil) {
+        self.assignments = nil;
+    }
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
-    [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket, GTLGraderecorderAssignmentCollection* assignmentCollection, NSError* error){
+    [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket,
+                                                    GTLGraderecorderAssignmentCollection* assignmentCollection,
+                                                    NSError* error){
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         self.initialQueryComplete = YES;
         if (error == nil) {
+            [self.assignments addObjectsFromArray:assignmentCollection.items];
             if (assignmentCollection.nextPageToken != nil) {
-                NSLog(@"TODO: query for more assignemnts using page token %@", assignmentCollection.nextPageToken);
+                NSLog(@"Finished query but there are more assignments!  So far we have %d assignments.", (int)self.assignments.count);
+                [self _queryForAssignmentsWithPageToken:assignmentCollection.nextPageToken];
+            } else {
+                NSLog(@"Found %d assignments total.", (int)self.assignments.count);
             }
-            self.assignments = [assignmentCollection.items mutableCopy];
         } else {
             NSLog(@"Unable to query for assignments %@", error);
             [RHDialogUtils showErrorDialog:error];
@@ -314,7 +324,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             return;
         }
         assignment.entityKey = updatedAssignment.entityKey;
-        [self performSelector:@selector(_queryForAssignments) withObject:nil afterDelay:1.0];
+        [self performSelector:@selector(_queryForAssignmentsWithPageToken:) withObject:nil afterDelay:1.0];
     }];
 }
 

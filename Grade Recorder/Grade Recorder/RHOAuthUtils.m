@@ -15,7 +15,7 @@
 
 #import "RHDialogUtils.h"
 
-#define kLocalHostTesting NO
+#define kLocalHostTesting YES
 #define kLocalHostUrl @"http://localhost:8080/_ah/api/rpc?prettyPrint=false"
 
 // For the backend --> fisherds-grade-recorder.appspot.com

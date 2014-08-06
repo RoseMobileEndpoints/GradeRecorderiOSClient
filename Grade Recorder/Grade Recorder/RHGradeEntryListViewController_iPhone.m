@@ -36,7 +36,7 @@
     [super viewDidLoad];
     UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
-                       action:@selector(_queryForGradeEntries)
+                       action:@selector(_queryForGradeEntriesWithPageToken:)
              forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
 }
@@ -48,9 +48,7 @@
     self.initialQueryComplete = NO;
     self.gradeEntryMap = nil; // Reset the gradeEntryMap in case the detail view changed the data.
     [self.tableView reloadData];
-    [self _queryForGradeEntriesWithPageToken:nil withCallback:^{
-        NSLog(@"Initial query for grades is complete.");
-    }];
+    [self _queryForGradeEntriesWithPageToken:nil];
 }
 
 
@@ -324,9 +322,7 @@
         case 5:
             // Refresh the grade entries.
             NSLog(@"Refresh Grade Entries");
-            [self _queryForGradeEntriesWithPageToken:nil withCallback:^{
-                NSLog(@"All the grades have loaded");
-            }];
+            [self _queryForGradeEntriesWithPageToken:nil];
             break;
     }
 }
@@ -335,7 +331,7 @@
 #pragma mark - Performing Endpoints Queries
 
 // TODO: Set the order.  The order is actually not being set.  It is fortunate to be in order.
-- (void) _queryForGradeEntriesWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
+- (void) _queryForGradeEntriesWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
     query.limit = 20;
@@ -352,15 +348,12 @@
             self.gradeEntryMap = nil; // Anytime the gradeEntries change reset the map.
             if (gradeEntryCollection.nextPageToken != nil) {
                 NSLog(@"Finished query but there are more grades!  So far we have %d students.", (int)self.gradeEntries.count);
-                [self _queryForGradeEntriesWithPageToken:gradeEntryCollection.nextPageToken
-                                            withCallback:callback];
+                [self _queryForGradeEntriesWithPageToken:gradeEntryCollection.nextPageToken];
             } else {
                 NSLog(@"Found %d grades for assignment %@.", (int)self.gradeEntries.count, self.assignment.name);
-                if (callback) {
-                    callback();
-                }
             }
         } else {
+            NSLog(@"Unable to query for grade entries %@", error);
             [RHDialogUtils showErrorDialog:error];
         }
         [self.tableView reloadData];
