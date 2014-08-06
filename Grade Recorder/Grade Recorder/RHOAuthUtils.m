@@ -93,8 +93,8 @@ static void (^__signInCallback)(NSError* error);
         NSAssert(authorizer.userEmail != nil, @"Authorizer has no user email");
         NSAssert(authorizer.canAuthorize, @"Authorizer can't authorize");
     }
-    [RHOAuthUtils getService].authorizer = authorizer;
     __authorizer = authorizer;
+    [RHOAuthUtils getService].authorizer = [RHOAuthUtils _getAuthorizer];
 }
 
 
