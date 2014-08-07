@@ -74,7 +74,6 @@
 		FDF544BD180A399400BFDC16 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FDF544BB180A399400BFDC16 /* InfoPlist.strings */; };
 		FDF544BF180A399400BFDC16 /* Grade_RecorderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF544BE180A399400BFDC16 /* Grade_RecorderTests.m */; };
 		FDF544CC180A3A1100BFDC16 /* RHAssignmentListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF544CB180A3A1100BFDC16 /* RHAssignmentListViewController_iPhone.m */; };
-		FDF544D2180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF544D1180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m */; };
 		FDF544D5180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF544D4180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m */; };
 		FDF544D8180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FDF544D7180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard */; };
 		FDF54546180A431400BFDC16 /* RHOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF54545180A431400BFDC16 /* RHOAuthUtils.m */; };
@@ -204,8 +203,6 @@
 		FDF544BE180A399400BFDC16 /* Grade_RecorderTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Grade_RecorderTests.m; sourceTree = "<group>"; };
 		FDF544CA180A3A1100BFDC16 /* RHAssignmentListViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHAssignmentListViewController_iPhone.h; sourceTree = "<group>"; };
 		FDF544CB180A3A1100BFDC16 /* RHAssignmentListViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHAssignmentListViewController_iPhone.m; sourceTree = "<group>"; };
-		FDF544D0180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHGradeEntryDetailViewController_iPhone.h; sourceTree = "<group>"; };
-		FDF544D1180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHGradeEntryDetailViewController_iPhone.m; sourceTree = "<group>"; };
 		FDF544D3180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RHGradeEntryListViewController_iPhone.h; sourceTree = "<group>"; };
 		FDF544D4180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RHGradeEntryListViewController_iPhone.m; sourceTree = "<group>"; };
 		FDF544D7180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
@@ -378,8 +375,6 @@
 				FDF544CB180A3A1100BFDC16 /* RHAssignmentListViewController_iPhone.m */,
 				FDF544D3180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.h */,
 				FDF544D4180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m */,
-				FDF544D0180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.h */,
-				FDF544D1180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m */,
 			);
 			name = "iPhone View Controllers";
 			sourceTree = "<group>";
@@ -603,7 +598,6 @@
 				FD4AF547182C9CFA001554F3 /* GTLUtilities.m in Sources */,
 				FD101FAD1990785D002175DF /* RHDialogUtils.m in Sources */,
 				FD1C8E88198BCE39001E31D7 /* GTLGraderecorderAssignmentCollection.m in Sources */,
-				FDF544D2180A3C0000BFDC16 /* RHGradeEntryDetailViewController_iPhone.m in Sources */,
 				FD1C8E8C198BCE39001E31D7 /* GTLGraderecorderStudent.m in Sources */,
 				FD1C8E8B198BCE39001E31D7 /* GTLGraderecorderGradeEntryCollection.m in Sources */,
 				FD1C8E8E198BCE39001E31D7 /* GTLQueryGraderecorder.m in Sources */,

@@ -65,12 +65,14 @@ static NSMutableDictionary* __teamMap;
             [__studentMap setObject:student forKey:student.entityKey];
 
             // Add this student to the array of students for the team.
-            NSMutableArray* teamMembers = [__teamMap objectForKey:student.team];
-            if (teamMembers == nil) {
-                teamMembers = [[NSMutableArray alloc] init]; // First student on team.
+            if (student.team) {
+                NSMutableArray* teamMembers = [__teamMap objectForKey:student.team];
+                if (teamMembers == nil) {
+                    teamMembers = [[NSMutableArray alloc] init]; // First student on team.
+                }
+                [teamMembers addObject:student];
+                [__teamMap setObject:teamMembers forKey:student.team];
             }
-            [teamMembers addObject:student];
-            [__teamMap setObject:teamMembers forKey:student.team];
         }
 
         // See if there are more students on the server.
