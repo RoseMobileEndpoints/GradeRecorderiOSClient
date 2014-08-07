@@ -12,7 +12,6 @@
 
 #import "GTLGraderecorderStudent+Customization.h"
 #import "RHDialogUtils.h"
-#import "RHGradeEntryDetailViewController_iPhone.h"
 #import "RHOAuthUtils.h"
 #import "RHStudentUtils.h"
 
