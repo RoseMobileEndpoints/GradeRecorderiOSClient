@@ -35,7 +35,7 @@
     self.navigationItem.hidesBackButton = YES;
     UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self
-                       action:@selector(_queryForAssignmentsWithPageToken:)
+                       action:@selector(_queryForAssignments)
              forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
 }
@@ -45,7 +45,7 @@
     [super viewWillAppear:animated];
     self.showingRenameButtons = NO;
     self.initialQueryComplete = NO;
-    [self _queryForAssignmentsWithPageToken:nil];
+    [self _queryForAssignments];
 }
 
 
@@ -228,7 +228,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
         case 4:
             // Check for new grades (also done via pull down to refresh)
             NSLog(@"Requery for assignments");
-            [self _queryForAssignmentsWithPageToken:nil];
+            [self _queryForAssignments];
             break;
     }
 }
@@ -278,6 +278,11 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 
 #pragma mark - Performing Endpoints Queries
 
+- (void) _queryForAssignments {
+    [self _queryForAssignmentsWithPageToken:nil];
+}
+
+
 - (void) _queryForAssignmentsWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentList];
@@ -324,7 +329,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             return;
         }
         assignment.entityKey = updatedAssignment.entityKey;
-        [self performSelector:@selector(_queryForAssignmentsWithPageToken:) withObject:nil afterDelay:1.0];
+        [self performSelector:@selector(_queryForAssignments) withObject:nil afterDelay:1.0];
     }];
 }
 
