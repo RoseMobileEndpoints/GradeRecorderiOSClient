@@ -20,23 +20,15 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
-    if ([RHOAuthUtils hasAuthorizer]) {
-        NSLog(@"Push to next scene.  The service already has an authorizer.");
-        [self performSegueWithIdentifier:kLoginCompleteSegue sender:nil];
-    }
+
+    // TODO: If a user is already logged in ([RHOAuthUtils hasAuthorizer] is true) then push to the next scene (performSegue).
 }
 
 
 - (IBAction)pressedSignIn:(id)sender {
-    [RHOAuthUtils signInFromViewController:self withCallback:^(NSError *error) {
-        if (error != nil) {
-            [RHDialogUtils showErrorDialog:error];
-        } else {
-            NSLog(@"Sign in successfully completed.  Push to next scene.");
-            [self performSegueWithIdentifier:kLoginCompleteSegue sender:nil];
-        }
-    }];
+
+    // TODO: Call signInFromViewController.  If there is an error display it, otherwise performSegue.
+
 }
 
 @end

@@ -10,6 +10,6 @@
 
 @interface RHLoginViewController : UIViewController
 
-- (IBAction)pressedSignIn:(id)sender;
+- (IBAction) pressedSignIn:(id) sender;
 
 @end
