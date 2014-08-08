@@ -44,6 +44,7 @@
 		FD4AF552182C9CFA001554F3 /* GTMOAuth2SignIn.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4AF538182C9CFA001554F3 /* GTMOAuth2SignIn.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FD4AF553182C9CFA001554F3 /* GTMOAuth2ViewControllerTouch.m in Sources */ = {isa = PBXBuildFile; fileRef = FD4AF53A182C9CFA001554F3 /* GTMOAuth2ViewControllerTouch.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		FD4AF554182C9CFA001554F3 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = FD4AF53B182C9CFA001554F3 /* GTMOAuth2ViewTouch.xib */; };
+		FD4F3AB919946F7C00D5EAB3 /* gplus_sign_in_button.png in Resources */ = {isa = PBXBuildFile; fileRef = FD4F3AB819946F7C00D5EAB3 /* gplus_sign_in_button.png */; };
 		FD7B792F1991DCE0005E4598 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = FD7B79211991DCE0005E4598 /* Icon-40.png */; };
 		FD7B79301991DCE0005E4598 /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FD7B79221991DCE0005E4598 /* Icon-40@2x.png */; };
 		FD7B79311991DCE0005E4598 /* Icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = FD7B79231991DCE0005E4598 /* Icon-60.png */; };
@@ -169,6 +170,7 @@
 		FD4AF539182C9CFA001554F3 /* GTMOAuth2ViewControllerTouch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTMOAuth2ViewControllerTouch.h; sourceTree = "<group>"; };
 		FD4AF53A182C9CFA001554F3 /* GTMOAuth2ViewControllerTouch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTMOAuth2ViewControllerTouch.m; sourceTree = "<group>"; };
 		FD4AF53B182C9CFA001554F3 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		FD4F3AB819946F7C00D5EAB3 /* gplus_sign_in_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gplus_sign_in_button.png; sourceTree = "<group>"; };
 		FD7B79211991DCE0005E4598 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
 		FD7B79221991DCE0005E4598 /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
 		FD7B79231991DCE0005E4598 /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
@@ -264,6 +266,14 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		FD4F3AB719946F6F00D5EAB3 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				FD4F3AB819946F7C00D5EAB3 /* gplus_sign_in_button.png */,
+			);
+			name = Images;
+			sourceTree = "<group>";
+		};
 		FD7B79201991DCCF005E4598 /* icons */ = {
 			isa = PBXGroup;
 			children = (
@@ -340,6 +350,7 @@
 		FDF5449C180A399300BFDC16 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FD4F3AB719946F6F00D5EAB3 /* Images */,
 				FD7B79201991DCCF005E4598 /* icons */,
 				FDF5449D180A399300BFDC16 /* Grade Recorder-Info.plist */,
 				FDF5449E180A399300BFDC16 /* InfoPlist.strings */,
@@ -545,6 +556,7 @@
 				FDF544D8180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard in Resources */,
 				FD7B79381991DCE0005E4598 /* Icon-Small-50@2x.png in Resources */,
 				FD7B79341991DCE0005E4598 /* Icon-72@2x.png in Resources */,
+				FD4F3AB919946F7C00D5EAB3 /* gplus_sign_in_button.png in Resources */,
 				FD7B79331991DCE0005E4598 /* Icon-72.png in Resources */,
 				FDF544A0180A399300BFDC16 /* InfoPlist.strings in Resources */,
 				FD7B79301991DCE0005E4598 /* Icon-40@2x.png in Resources */,

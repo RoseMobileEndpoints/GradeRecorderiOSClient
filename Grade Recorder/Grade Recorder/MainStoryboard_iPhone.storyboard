@@ -88,7 +88,7 @@
             </objects>
             <point key="canvasLocation" x="722" y="-96"/>
         </scene>
-        <!--Login View Controller - Login-->
+        <!--Login View Controller-->
         <scene sceneID="nGV-3E-R5h">
             <objects>
                 <viewController id="Tda-T6-QPS" customClass="RHLoginViewController" sceneMemberID="viewController">
@@ -100,20 +100,33 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akG-cR-sy9">
-                                <rect key="frame" x="57" y="269" width="206" height="30"/>
+                            <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akG-cR-sy9">
+                                <rect key="frame" x="41" y="304" width="239" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Sign in with Google">
+                                <state key="normal" title="Sign in with Google" image="gplus_sign_in_button.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="pressedSignIn:" destination="Tda-T6-QPS" eventType="touchUpInside" id="Jpc-qY-qKR"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Grade Recorder" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hux-8o-W3f">
+                                <rect key="frame" x="20" y="105" width="280" height="66"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="32"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="www.graderecorder.com" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Sb3-fk-Pm6">
+                                <rect key="frame" x="66" y="160" width="188" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.92997262773722644" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Login" id="Q1M-kO-vLZ"/>
+                    <navigationItem key="navigationItem" id="Q1M-kO-vLZ"/>
                     <connections>
                         <segue destination="aM3-X1-0Yt" kind="push" identifier="LoginCompleteSegue" id="nD0-69-b5n"/>
                     </connections>
@@ -226,6 +239,9 @@
             <point key="canvasLocation" x="-150" y="-96"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="gplus_sign_in_button.png" width="1181" height="222"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

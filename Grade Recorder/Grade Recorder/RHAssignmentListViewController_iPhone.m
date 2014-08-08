@@ -50,7 +50,7 @@
 
 
 - (void) viewDidAppear:(BOOL) animated {
-    if ([RHStudentUtils getStudents] == nil) {
+    if ([RHStudentUtils getStudents].count == 0) {
         NSLog(@"StudentUtils has no students, so update the roster now for later use.");
         [RHStudentUtils updateStudentRosterWithCallback:nil]; // No action needed when complete.
     }
@@ -329,7 +329,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             return;
         }
         assignment.entityKey = updatedAssignment.entityKey;
-        [self performSelector:@selector(_queryForAssignments) withObject:nil afterDelay:1.0];
+        //[self performSelector:@selector(_queryForAssignments) withObject:nil afterDelay:1.0]; // Optional update.
     }];
 }
 

@@ -27,9 +27,6 @@
 // of GTLGraderecorderStudent (from the RHStudentUtils)
 @property (nonatomic, weak) NSArray* students;
 
-// of NSString (entityKey) to GTLGraderecorderStudent
-@property (nonatomic, weak) NSDictionary* studentMap;
-
 // of NSString (team names from )
 @property (nonatomic, strong) NSArray* teams;
 
@@ -85,16 +82,10 @@
     return _students;
 }
 
-- (NSDictionary*) studentMap {
-    if (_studentMap == nil) {
-        _studentMap = [RHStudentUtils getStudentMap];
-    }
-    return _studentMap;
-}
 
 - (NSArray*) teams {
     if (_teams == nil) {
-        // Build the teams array from the teamsMap (there is no RHStudentUtils getTeams function).
+        // Build the teams array from the teamsMap (there is no [RHStudentUtils getTeams] function).
         _teams = [[self.teamMap allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     }
     return _teams;
@@ -324,6 +315,10 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
     } else if (alertView.tag == kAlertTagRefreshRoster) {
         [RHStudentUtils updateStudentRosterWithCallback:^{
             NSLog(@"Roster up to date.  Refresh table.");
+            // Clear saved data relating to the roster.
+            self.students = nil;
+            self.teams = nil;
+            self.teamMap = nil;
             [self.tableView reloadData];
         }];
     }
@@ -356,6 +351,10 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
                 NSLog(@"Roster up to date.  Refresh table.");
+                // Clear saved data relating to the roster.
+                self.students = nil;
+                self.teams = nil;
+                self.teamMap = nil;
                 [self.tableView reloadData];
             }];
         }
@@ -435,7 +434,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
         if (error == nil) {
             NSLog(@"Successfully updated/added the grade entry.");
             gradeEntry.entityKey = updatedGradeEntry.entityKey;
-            [self performSelector:@selector(_queryForGradeEntries) withObject:nil afterDelay:1.0];
+            //[self performSelector:@selector(_queryForGradeEntries) withObject:nil afterDelay:1.0]; // Optional refresh
         } else {
             NSLog(@"The grade entry did not get updated/added. error = %@", error.localizedDescription);
             [RHDialogUtils showErrorDialog:error];
