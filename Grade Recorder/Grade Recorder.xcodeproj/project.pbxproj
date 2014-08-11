@@ -44,8 +44,6 @@
 		FDF544D5180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF544D4180A3C2A00BFDC16 /* RHGradeEntryListViewController_iPhone.m */; };
 		FDF544D8180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FDF544D7180A3C9600BFDC16 /* MainStoryboard_iPhone.storyboard */; };
 		FDF54546180A431400BFDC16 /* RHOAuthUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF54545180A431400BFDC16 /* RHOAuthUtils.m */; };
-		FDF54548180A47BB00BFDC16 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF54547180A47BB00BFDC16 /* SystemConfiguration.framework */; };
-		FDF5454A180A47C300BFDC16 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF54549180A47C300BFDC16 /* Security.framework */; };
 		FDF5454D180A495A00BFDC16 /* RHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FDF5454C180A495A00BFDC16 /* RHLoginViewController.m */; };
 /* End PBXBuildFile section */
 
@@ -117,8 +115,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FDF5454A180A47C300BFDC16 /* Security.framework in Frameworks */,
-				FDF54548180A47BB00BFDC16 /* SystemConfiguration.framework in Frameworks */,
 				FDF54496180A399300BFDC16 /* CoreGraphics.framework in Frameworks */,
 				FDF5449A180A399300BFDC16 /* CoreData.framework in Frameworks */,
 				FDF54498180A399300BFDC16 /* UIKit.framework in Frameworks */,
