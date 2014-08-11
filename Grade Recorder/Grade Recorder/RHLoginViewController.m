@@ -28,6 +28,7 @@
 - (IBAction)pressedSignIn:(id)sender {
 
     // TODO: Call signInFromViewController.  If there is an error display it, otherwise performSegue.
+    NSLog(@"You pressed Sign In.  Now make it do something");
 
 }
 
