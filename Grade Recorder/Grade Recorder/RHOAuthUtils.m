@@ -59,7 +59,7 @@ static void (^__signInCallback)(NSError* error);
 }
 
 
-// Save the authorizer for later use and link the authorizer to the service.
+// Set the authorizer and link the authorizer to the service.
 + (void) _setAuthorizer:(GTMOAuth2Authentication*) authorizer {
     // TODO: Implement.
 
