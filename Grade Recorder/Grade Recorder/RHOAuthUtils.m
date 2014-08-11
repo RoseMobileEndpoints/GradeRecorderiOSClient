@@ -42,8 +42,7 @@ static void (^__signInCallback)(NSError* error);
 
 
 + (GTLServiceGraderecorder*) getService {
-    // TODO: Implement.
-
+    return nil;  // TODO: Implement.
 }
 
 
@@ -56,8 +55,7 @@ static void (^__signInCallback)(NSError* error);
 
 // Returns the current authorizer if available, otherwise attempt to return the saved authorizer.
 + (GTMOAuth2Authentication*) _getAuthorizer {
-    // TODO: Implement.
-
+    return nil;  // TODO: Implement.
 }
 
 
