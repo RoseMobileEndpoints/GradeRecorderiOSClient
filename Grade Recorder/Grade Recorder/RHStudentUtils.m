@@ -45,7 +45,10 @@ static NSMutableDictionary* __teamMap;
 + (NSDictionary*) getTeamMap { return __teamMap; }
 
 
-// TODO: Create _queryForStudentsWithPageToken:withCallback:
++ (void) _queryForStudentsWithPageToken:(NSString*) pageToken
+                           withCallback:(void (^)()) callback {
+    // TODO: Implement
+}
 
 
 @end
