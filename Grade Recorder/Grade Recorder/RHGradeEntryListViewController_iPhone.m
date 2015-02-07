@@ -167,6 +167,9 @@
                     [scoresString appendFormat:@"%@", potentialGrade.score];
                 }
             }
+            if (scoresString.length == 0) {
+                [scoresString appendString:@" "]; // FYI setting to @"" caused removal of the label (infrequently). bug!
+            }
             cell.detailTextLabel.text = scoresString;
         } else {
             GTLGraderecorderStudent* student = self.students[indexPath.row];
@@ -175,7 +178,7 @@
             if (gradeEntryForStudent) {
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", gradeEntryForStudent.score];
             } else {
-                cell.detailTextLabel.text = @" "; // FYI setting to =nil caused removal of the label (forever). bug!
+                cell.detailTextLabel.text = @" "; // FYI setting to =nil caused removal of the label (nearly always). bug!
             }
             
         }
@@ -378,7 +381,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 - (void) _queryForGradeEntriesWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
-    query.limit = 20;
+    query.limit = 40; // Bumped up to just larger than a typical class size.
     query.pageToken = pageToken;
     if (pageToken == nil) {
         self.gradeEntries = nil; // Reset the array
