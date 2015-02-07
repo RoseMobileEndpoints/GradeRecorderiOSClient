@@ -48,7 +48,7 @@ static NSMutableDictionary* __teamMap;
 + (void) _queryForStudentsWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder* query = [GTLQueryGraderecorder queryForStudentList];
-    query.limit = 10;
+    query.limit = 40;
     query.pageToken = pageToken;
     [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [service executeQuery:query completionHandler:^(GTLServiceTicket* ticket,

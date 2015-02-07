@@ -286,7 +286,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 - (void) _queryForAssignmentsWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForAssignmentList];
-    query.limit = 20;
+    query.limit = 40;
     query.pageToken = pageToken;
     if (pageToken == nil) {
         self.assignments = nil;

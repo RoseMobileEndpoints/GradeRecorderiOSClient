@@ -58,6 +58,7 @@
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     self.title = self.assignment.name;
+    self.displayGradesByTeam = YES;
     self.gradeEntryMap = nil; // Reset the gradeEntryMap just in case
     [self.tableView reloadData];
     [self _queryForGradeEntries];
@@ -166,6 +167,9 @@
                     }
                     [scoresString appendFormat:@"%@", potentialGrade.score];
                 }
+            }
+            if (scoresString.length == 0) {
+                [scoresString appendString:@" "]; // FYI setting to @"" caused removal of the label (infrequently). bug
             }
             cell.detailTextLabel.text = scoresString;
         } else {
@@ -378,7 +382,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
 - (void) _queryForGradeEntriesWithPageToken:(NSString*) pageToken {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];
     GTLQueryGraderecorder * query = [GTLQueryGraderecorder queryForGradeentryListWithAssignmentKey:self.assignment.entityKey];
-    query.limit = 20;
+    query.limit = 40;
     query.pageToken = pageToken;
     if (pageToken == nil) {
         self.gradeEntries = nil; // Reset the array
@@ -401,8 +405,8 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             [self _queryForGradeEntriesWithPageToken:gradeEntryCollection.nextPageToken];
         } else {
             NSLog(@"Finished getting grades %d grades found for assignment %@.", (int)self.gradeEntries.count, self.assignment.name);
+            self.title = [NSString stringWithFormat:@"%@ (%d)", self.assignment.name, (int)self.gradeEntries.count];
         }
-        NSLog(@"Refresh table data");
         [self.tableView reloadData];
     }];
 }
