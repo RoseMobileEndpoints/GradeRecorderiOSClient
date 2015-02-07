@@ -65,7 +65,7 @@
 
 - (IBAction) pressedOptions:(id) sender {
     NSString* toggleRenameButtonsTitle = self.showingRenameButtons ? @"Hide rename buttons" : @"Show rename buttons";
-    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
+    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
