@@ -121,7 +121,7 @@
 
 
 - (IBAction) pressedOptionsButton:(id)sender {
-    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:@""
+    UIActionSheet* actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
@@ -175,7 +175,7 @@
             if (gradeEntryForStudent) {
                 cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", gradeEntryForStudent.score];
             } else {
-                cell.detailTextLabel.text = nil;
+                cell.detailTextLabel.text = @" "; // FYI setting to nil caused removal of the label.
             }
             
         }
