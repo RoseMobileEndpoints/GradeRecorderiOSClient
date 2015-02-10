@@ -202,7 +202,25 @@
 
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
+    if (self.displayGradesByTeam) {
+        if (self.teams.count == 0) {
+            return NO;
+        }
+        NSString* teamName = self.teams[indexPath.row];
+        NSArray* teamMembers = self.teamMap[teamName];
+        for (GTLGraderecorderStudent* teamMember in teamMembers) {
+            if ([self.gradeEntryMap objectForKey:teamMember.entityKey] != nil) {
+                return YES;
+            }
+        }
+        return NO;
+    } else {
+        if (self.students.count == 0) {
+            return NO;
+        }
+        GTLGraderecorderStudent* student = self.students[indexPath.row];
+        return [self.gradeEntryMap objectForKey:student.entityKey] != nil;
+    }
 }
 
 
