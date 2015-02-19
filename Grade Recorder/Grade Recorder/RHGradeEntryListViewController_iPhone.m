@@ -38,6 +38,9 @@
 
 // of NSString (student entityKey) to GTLGraderecorderGradeEntry.
 @property (nonatomic, strong) NSDictionary* gradeEntryMap;
+
+// Necessary when this view controller stopped being a UITableViewController.
+@property (nonatomic, strong) UIRefreshControl* refreshControl;
 @end
 
 
@@ -59,6 +62,7 @@
     [super viewWillAppear:animated];
     self.title = self.assignment.name;
     self.displayGradesByTeam = YES;
+    [self.displayTypeTabBar setSelectedItem:self.displayTypeTabBar.items[2]];
     self.gradeEntryMap = nil; // Reset the gradeEntryMap just in case
     [self.tableView reloadData];
     [self _queryForGradeEntries];
@@ -127,7 +131,6 @@
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:@"Delete a grade entry",
-                                  @"Display by Team", @"Display by Student",
                                   @"Refresh student roster", @"Refresh Grade Entries", nil];
     [actionSheet showInView:self.view];
 }
@@ -359,17 +362,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             NSLog(@"Delete an grade entry");
             [self setEditing:YES animated:YES];
             break;
-        case 1:
-            NSLog(@"Display by Team");
-            self.displayGradesByTeam = YES;
-            [self.tableView reloadData];
-            break;
-        case 2:
-            NSLog(@"Display by Student");
-            self.displayGradesByTeam = NO;
-            [self.tableView reloadData];
-            break;
-        case 3: {
+        case 1: {
             // Update Student Roster
             NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
@@ -382,12 +375,29 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             }];
         }
             break;
-        case 4:
+        case 2:
             // Refresh the grade entries.
             NSLog(@"Refresh Grade Entries");
             [self _queryForGradeEntries];
             break;
     }
+}
+
+
+#pragma mark - UITabBarDelegate
+
+// called when a new view is selected by the user (but not programatically)
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
+    if (item.tag == 0) {
+        self.displayGradesByTeam = NO;
+        self.students = [self.students sortedArrayUsingSelector:@selector(compareFirstLast:)];
+    } else if (item.tag == 1) {
+        self.displayGradesByTeam = NO;
+        self.students = [self.students sortedArrayUsingSelector:@selector(compareLastFirst:)];
+    } else {
+        self.displayGradesByTeam = YES;
+    }
+    [self.tableView reloadData];
 }
 
 
