@@ -44,6 +44,10 @@ static NSMutableDictionary* __teamMap;
 + (NSArray*) getStudents { return __students; }
 + (NSDictionary*) getTeamMap { return __teamMap; }
 
++ (void) clearStudents {
+    [__students removeAllObjects];
+    [__teamMap removeAllObjects];
+}
 
 + (void) _queryForStudentsWithPageToken:(NSString*) pageToken withCallback:(void (^)()) callback {
     GTLServiceGraderecorder* service = [RHOAuthUtils getService];

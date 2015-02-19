@@ -253,6 +253,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             [self setEditing:NO animated:YES];
         }
         [tableView reloadData];
+        self.title = [NSString stringWithFormat:@"%@ (%d)", self.assignment.name, (int)self.gradeEntries.count];
     }
 }
 
@@ -436,6 +437,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
     newGradeEntry.studentKey = studentKey;
     newGradeEntry.score = score;
     [self.gradeEntries addObject:newGradeEntry];
+    self.title = [NSString stringWithFormat:@"%@ (%d)", self.assignment.name, (int)self.gradeEntries.count];
     self.gradeEntryMap = nil;
     [self _insertGradeEntry:newGradeEntry];
 }

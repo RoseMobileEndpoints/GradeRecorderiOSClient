@@ -59,6 +59,7 @@
 
 - (IBAction) pressedSignOut:(id) sender {
     [RHOAuthUtils signOut];
+    [RHStudentUtils clearStudents];
     [self.navigationController popViewControllerAnimated:YES];
 }
 

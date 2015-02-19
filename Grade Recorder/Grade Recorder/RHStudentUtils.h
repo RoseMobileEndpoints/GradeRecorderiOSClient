@@ -13,5 +13,6 @@
 + (BOOL) updateStudentRosterWithCallback:(void (^)()) callback;
 + (NSArray*) getStudents; // Array of all GTLGraderecorderStudents.
 + (NSDictionary*) getTeamMap; // Map of NSString to NSArray (of GTLGraderecorderStudents).
++ (void) clearStudents;
 
 @end
