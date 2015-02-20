@@ -53,8 +53,6 @@
 		FD9250001A959749009E5567 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = FD924FF91A959749009E5567 /* Icon.png */; };
 		FD9250011A959749009E5567 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FD924FFA1A959749009E5567 /* Icon@2x.png */; };
 		FD9250031A95A2AD009E5567 /* ic_menu_bars.png in Resources */ = {isa = PBXBuildFile; fileRef = FD9250021A95A2AD009E5567 /* ic_menu_bars.png */; };
-		FD9250091A95A617009E5567 /* team.png in Resources */ = {isa = PBXBuildFile; fileRef = FD9250081A95A617009E5567 /* team.png */; };
-		FD92500D1A95A7F3009E5567 /* individual.png in Resources */ = {isa = PBXBuildFile; fileRef = FD92500C1A95A7F3009E5567 /* individual.png */; };
 		FDF54494180A399300BFDC16 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF54493180A399300BFDC16 /* Foundation.framework */; };
 		FDF54496180A399300BFDC16 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF54495180A399300BFDC16 /* CoreGraphics.framework */; };
 		FDF54498180A399300BFDC16 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FDF54497180A399300BFDC16 /* UIKit.framework */; };
@@ -175,8 +173,6 @@
 		FD924FF91A959749009E5567 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		FD924FFA1A959749009E5567 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		FD9250021A95A2AD009E5567 /* ic_menu_bars.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ic_menu_bars.png; sourceTree = "<group>"; };
-		FD9250081A95A617009E5567 /* team.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = team.png; sourceTree = "<group>"; };
-		FD92500C1A95A7F3009E5567 /* individual.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = individual.png; sourceTree = "<group>"; };
 		FDF54490180A399300BFDC16 /* Grade Recorder.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Grade Recorder.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FDF54493180A399300BFDC16 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FDF54495180A399300BFDC16 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -261,8 +257,6 @@
 		FD4F3AB719946F6F00D5EAB3 /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				FD92500C1A95A7F3009E5567 /* individual.png */,
-				FD9250081A95A617009E5567 /* team.png */,
 				FD9250021A95A2AD009E5567 /* ic_menu_bars.png */,
 				FD4F3AB819946F7C00D5EAB3 /* gplus_sign_in_button.png */,
 			);
@@ -544,14 +538,12 @@
 				FD924FFF1A959749009E5567 /* Icon-Small-50@2x.png in Resources */,
 				FD924FFD1A959749009E5567 /* Icon-72@2x.png in Resources */,
 				FD924FFE1A959749009E5567 /* Icon-Small-50.png in Resources */,
-				FD9250091A95A617009E5567 /* team.png in Resources */,
 				FD924FFB1A959749009E5567 /* Icon-60.png in Resources */,
 				FD4F3AB919946F7C00D5EAB3 /* gplus_sign_in_button.png in Resources */,
 				FDF544A0180A399300BFDC16 /* InfoPlist.strings in Resources */,
 				FD9250001A959749009E5567 /* Icon.png in Resources */,
 				FD924FFC1A959749009E5567 /* Icon-72.png in Resources */,
 				FD9250031A95A2AD009E5567 /* ic_menu_bars.png in Resources */,
-				FD92500D1A95A7F3009E5567 /* individual.png in Resources */,
 				FDF544AB180A399300BFDC16 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

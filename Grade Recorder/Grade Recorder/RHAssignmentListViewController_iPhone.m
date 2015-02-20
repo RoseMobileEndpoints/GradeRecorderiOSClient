@@ -70,7 +70,7 @@
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Add an assignment", @"Delete an assignment", toggleRenameButtonsTitle, @"Refresh student roster", @"Refresh assignment list", nil];
+                                                    otherButtonTitles:@"Add an assignment", @"Delete an assignment", toggleRenameButtonsTitle, @"Refresh student roster", nil];
     [actionSheet showInView:self.view];
 }
 
@@ -203,7 +203,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
                                                             message:@""
                                                            delegate:self
                                                    cancelButtonTitle:@"Cancel"
-                                                  otherButtonTitles:@"Add assignment", nil];
+                                                  otherButtonTitles:@"Add", nil];
             [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
             UITextField* tf = [alert textFieldAtIndex:0];
             tf.placeholder = @"Name for assignment";
@@ -212,24 +212,16 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             break;
         case 1:
             // Delete an assignemnt
-            NSLog(@"Delete an assignment");
             [self setEditing:YES animated:YES];
             break;
         case 2:
             // Toggle rename button state
-            NSLog(@"Toggle rename buttons");
             self.showingRenameButtons ^= YES;
             [self.tableView reloadData];
             break;
         case 3:
             // Update Student Roster
-            NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:nil];
-            break;
-        case 4:
-            // Check for new grades (also done via pull down to refresh)
-            NSLog(@"Requery for assignments");
-            [self _queryForAssignments];
             break;
     }
 }

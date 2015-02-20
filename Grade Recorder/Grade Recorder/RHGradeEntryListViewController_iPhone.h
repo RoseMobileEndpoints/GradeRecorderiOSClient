@@ -9,14 +9,16 @@
 #import <UIKit/UIKit.h>
 @class GTLGraderecorderAssignment;
 
-@interface RHGradeEntryListViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate, UITabBarDelegate>
+@interface RHGradeEntryListViewController_iPhone : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) GTLGraderecorderAssignment* assignment;
 @property (nonatomic, strong) IBOutlet UIBarButtonItem* optionsBarButton;
 @property (nonatomic) BOOL displayGradesByTeam;
-@property (weak, nonatomic) IBOutlet UITabBar *displayTypeTabBar;
 
 - (IBAction) pressedOptionsButton:(id) sender;
+- (IBAction) pressedByStudent:(id) sender;
+- (IBAction) pressedByTeam:(id) sender;
+
 
 @end

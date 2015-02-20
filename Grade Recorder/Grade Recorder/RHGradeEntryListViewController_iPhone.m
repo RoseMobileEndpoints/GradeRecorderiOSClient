@@ -41,6 +41,7 @@
 
 // Necessary when this view controller stopped being a UITableViewController.
 @property (nonatomic, strong) UIRefreshControl* refreshControl;
+
 @end
 
 
@@ -55,6 +56,15 @@
                        action:@selector(_queryForGradeEntries)
              forControlEvents:UIControlEventValueChanged];
     self.refreshControl = refreshControl;
+
+    // HACK CITY!!!
+    // From: http://stackoverflow.com/questions/12497940/uirefreshcontrol-without-uitableviewcontroller
+    UITableViewController *tableViewController = [[UITableViewController alloc] init];
+    tableViewController.tableView = self.tableView;
+
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    [self.refreshControl addTarget:self action:@selector(_queryForGradeEntries) forControlEvents:UIControlEventValueChanged];
+    tableViewController.refreshControl = self.refreshControl;
 }
 
 
@@ -62,7 +72,6 @@
     [super viewWillAppear:animated];
     self.title = self.assignment.name;
     self.displayGradesByTeam = YES;
-    [self.displayTypeTabBar setSelectedItem:self.displayTypeTabBar.items[2]];
     self.gradeEntryMap = nil; // Reset the gradeEntryMap just in case
     [self.tableView reloadData];
     [self _queryForGradeEntries];
@@ -82,7 +91,7 @@
 
 - (NSArray*) students {
     if (_students == nil) {
-        _students = [[RHStudentUtils getStudents] sortedArrayUsingSelector:@selector(compareLastFirst:)];
+        _students = [[RHStudentUtils getStudents] sortedArrayUsingSelector:@selector(compareFirstLast:)];
     }
     return _students;
 }
@@ -131,8 +140,18 @@
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:@"Delete a grade entry",
-                                  @"Refresh student roster", @"Refresh Grade Entries", nil];
+                                  @"Refresh student roster", nil];
     [actionSheet showInView:self.view];
+}
+
+- (IBAction)pressedByStudent:(id)sender {
+    self.displayGradesByTeam = NO;
+    [self.tableView reloadData];
+}
+
+- (IBAction)pressedByTeam:(id)sender {
+    self.displayGradesByTeam = YES;
+    [self.tableView reloadData];
 }
 
 
@@ -194,7 +213,8 @@
 
 
 - (void) setEditing:(BOOL) editing animated:(BOOL) animated {
-    [super setEditing:editing animated:animated];
+//    [super setEditing:editing animated:animated];  // No longer a UITableViewController
+    [self.tableView setEditing:editing animated:animated];
     if (editing) {
         self.navigationItem.rightBarButtonItem = self.editButtonItem;
     } else {
@@ -345,6 +365,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             self.students = nil;
             self.teams = nil;
             self.teamMap = nil;
+            self.gradeEntryMap = nil;
             [self.tableView reloadData];
         }];
     }
@@ -359,12 +380,10 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
     }
     switch (buttonIndex) {
         case 0:
-            NSLog(@"Delete an grade entry");
             [self setEditing:YES animated:YES];
             break;
         case 1: {
             // Update Student Roster
-            NSLog(@"Refresh student roster");
             [RHStudentUtils updateStudentRosterWithCallback:^{
                 NSLog(@"Roster up to date.  Refresh table.");
                 // Clear saved data relating to the roster.
@@ -375,29 +394,7 @@ commitEditingStyle:(UITableViewCellEditingStyle) editingStyle
             }];
         }
             break;
-        case 2:
-            // Refresh the grade entries.
-            NSLog(@"Refresh Grade Entries");
-            [self _queryForGradeEntries];
-            break;
     }
-}
-
-
-#pragma mark - UITabBarDelegate
-
-// called when a new view is selected by the user (but not programatically)
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item {
-    if (item.tag == 0) {
-        self.displayGradesByTeam = NO;
-        self.students = [self.students sortedArrayUsingSelector:@selector(compareFirstLast:)];
-    } else if (item.tag == 1) {
-        self.displayGradesByTeam = NO;
-        self.students = [self.students sortedArrayUsingSelector:@selector(compareLastFirst:)];
-    } else {
-        self.displayGradesByTeam = YES;
-    }
-    [self.tableView reloadData];
 }
 
 

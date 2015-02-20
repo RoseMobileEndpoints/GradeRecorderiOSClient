@@ -68,7 +68,7 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="Assignments" id="sWy-27-RWJ">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="411-i3-hUX"/>
+                        <barButtonItem key="backBarButtonItem" title=" " id="411-i3-hUX"/>
                         <barButtonItem key="leftBarButtonItem" title="Sign out" id="T37-Le-lQJ">
                             <connections>
                                 <action selector="pressedSignOut:" destination="aM3-X1-0Yt" id="jE1-hH-ScP"/>
@@ -145,20 +145,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tabBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pZ1-bT-rXf">
-                                <rect key="frame" x="0.0" y="519" width="320" height="49"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="R9H-ia-3eS">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <items>
-                                    <tabBarItem title="First Last" image="individual.png" id="V1L-hZ-xfW"/>
-                                    <tabBarItem tag="1" title="Last, First" image="individual.png" id="EwY-AT-g7D"/>
-                                    <tabBarItem tag="2" title="By Team" image="team.png" id="CLb-Ds-7eN"/>
+                                    <barButtonItem title="By Student" id="u7w-nE-zSb">
+                                        <connections>
+                                            <action selector="pressedByStudent:" destination="096-Lt-Iuj" id="GkE-ia-9ga"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="wU9-Du-6gy"/>
+                                    <barButtonItem title="By Team" id="J7f-V4-bUW">
+                                        <connections>
+                                            <action selector="pressedByTeam:" destination="096-Lt-Iuj" id="8sv-64-sWh"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
-                                <connections>
-                                    <outlet property="delegate" destination="096-Lt-Iuj" id="rua-6G-KXg"/>
-                                </connections>
-                            </tabBar>
+                            </toolbar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="js3-zR-yVS">
-                                <rect key="frame" x="0.0" y="64" width="320" height="455"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="460"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="GradeEntryCell" textLabel="a3s-Tn-EJ3" detailTextLabel="KID-c9-np4" style="IBUITableViewCellStyleValue1" id="hKN-z0-0ol">
@@ -228,13 +232,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="pZ1-bT-rXf" secondAttribute="trailing" id="3sY-s4-tys"/>
                             <constraint firstItem="js3-zR-yVS" firstAttribute="leading" secondItem="BBg-VL-Z61" secondAttribute="leading" id="3tW-tn-ffA"/>
+                            <constraint firstItem="R9H-ia-3eS" firstAttribute="top" secondItem="js3-zR-yVS" secondAttribute="bottom" id="BON-1q-I77"/>
                             <constraint firstAttribute="trailing" secondItem="js3-zR-yVS" secondAttribute="trailing" id="DYI-Fp-Bpd"/>
-                            <constraint firstItem="ZLx-Gs-dfU" firstAttribute="top" secondItem="pZ1-bT-rXf" secondAttribute="bottom" id="K4s-Nu-LmL"/>
-                            <constraint firstItem="pZ1-bT-rXf" firstAttribute="top" secondItem="js3-zR-yVS" secondAttribute="bottom" id="KR4-FD-AMX"/>
+                            <constraint firstAttribute="trailing" secondItem="R9H-ia-3eS" secondAttribute="trailing" id="Ngs-qH-2Aa"/>
+                            <constraint firstItem="R9H-ia-3eS" firstAttribute="leading" secondItem="BBg-VL-Z61" secondAttribute="leading" id="uEk-fW-a4B"/>
+                            <constraint firstItem="ZLx-Gs-dfU" firstAttribute="top" secondItem="R9H-ia-3eS" secondAttribute="bottom" id="xbg-aO-BdY"/>
                             <constraint firstItem="js3-zR-yVS" firstAttribute="top" secondItem="t1p-oq-wgH" secondAttribute="bottom" id="y2M-pG-bsq"/>
-                            <constraint firstItem="pZ1-bT-rXf" firstAttribute="leading" secondItem="BBg-VL-Z61" secondAttribute="leading" id="ywN-52-ZDr"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="xQb-3g-NbT">
@@ -245,7 +249,6 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="displayTypeTabBar" destination="pZ1-bT-rXf" id="28W-se-19W"/>
                         <outlet property="optionsBarButton" destination="uFx-9h-S9g" id="T9X-gb-5NV"/>
                         <outlet property="tableView" destination="js3-zR-yVS" id="0Y0-hE-H3Y"/>
                     </connections>
@@ -272,9 +275,7 @@
     </scenes>
     <resources>
         <image name="gplus_sign_in_button.png" width="1181" height="222"/>
-        <image name="ic_menu_bars.png" width="20" height="15"/>
-        <image name="individual.png" width="24" height="24"/>
-        <image name="team.png" width="30" height="30"/>
+        <image name="ic_menu_bars.png" width="4" height="15"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
